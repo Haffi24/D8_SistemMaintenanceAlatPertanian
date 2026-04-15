@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace SistemMaintenanceAlatPertanian
 {
-    public partial class txtNamaTeknisi: Form
+    public partial class FormTeknisi: Form
     {
-        public txtNamaTeknisi()
+        public FormTeknisi()
         {
             InitializeComponent();
         }

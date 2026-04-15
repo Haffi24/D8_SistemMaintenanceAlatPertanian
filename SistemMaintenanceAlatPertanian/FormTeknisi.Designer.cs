@@ -1,6 +1,6 @@
 ﻿namespace SistemMaintenanceAlatPertanian
 {
-    partial class txtNamaTeknisi
+    partial class FormTeknisi
     {
         /// <summary>
         /// Required designer variable.
@@ -89,7 +89,7 @@
             this.dgvTeknisi.Size = new System.Drawing.Size(760, 187);
             this.dgvTeknisi.TabIndex = 5;
             // 
-            // txtNamaTeknisi
+            // FormTeknisi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -100,7 +100,7 @@
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
-            this.Name = "txtNamaTeknisi";
+            this.Name = "FormTeknisi";
             this.Text = "FormTeknisi";
             ((System.ComponentModel.ISupportInitialize)(this.dgvTeknisi)).EndInit();
             this.ResumeLayout(false);

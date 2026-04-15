@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SistemMaintenanceAlatPertanian
 {
-    public partial class Dashboard: Form
+    public partial class Dashboard : Form
     {
         public Dashboard()
         {
@@ -21,5 +21,26 @@ namespace SistemMaintenanceAlatPertanian
         {
 
         }
+
+        private void btnAlat_Click(object sender, EventArgs e)
+        {
+            FormAlat frmAlat = new FormAlat();
+            frmAlat.ShowDialog();
+        }
+
+        private void btnMaintenance_Click(object sender, EventArgs e)
+        {
+            FormMaintenanceAlat frmMaintenance = new FormMaintenanceAlat();
+            frmMaintenance.ShowDialog();
+        }
+
+        private void btnTeknisi_Click(object sender, EventArgs e)
+        {
+            // Pastikan nama class form kamu adalah FormTeknisi
+            FormTeknisi frmTeknisi = new FormTeknisi();
+            frmTeknisi.ShowDialog();
+        }
+       
+
     }
 }

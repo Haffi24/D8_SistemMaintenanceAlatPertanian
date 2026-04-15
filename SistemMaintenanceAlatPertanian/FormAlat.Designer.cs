@@ -30,13 +30,13 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.txtNamaAlat = new System.Windows.Forms.TextBox();
+            this.txtKondisi = new System.Windows.Forms.TextBox();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnHapus = new System.Windows.Forms.Button();
+            this.btnSimpan = new System.Windows.Forms.Button();
+            this.dgvAlat = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAlat)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -59,72 +59,72 @@
             this.label2.Text = "Nama Alat";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // textBox1
+            // txtNamaAlat
             // 
-            this.textBox1.Location = new System.Drawing.Point(175, 45);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(242, 20);
-            this.textBox1.TabIndex = 2;
+            this.txtNamaAlat.Location = new System.Drawing.Point(175, 45);
+            this.txtNamaAlat.Name = "txtNamaAlat";
+            this.txtNamaAlat.Size = new System.Drawing.Size(242, 20);
+            this.txtNamaAlat.TabIndex = 2;
             // 
-            // textBox2
+            // txtKondisi
             // 
-            this.textBox2.Location = new System.Drawing.Point(175, 80);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(239, 20);
-            this.textBox2.TabIndex = 3;
+            this.txtKondisi.Location = new System.Drawing.Point(175, 80);
+            this.txtKondisi.Name = "txtKondisi";
+            this.txtKondisi.Size = new System.Drawing.Size(239, 20);
+            this.txtKondisi.TabIndex = 3;
             // 
-            // button1
+            // btnUpdate
             // 
-            this.button1.Location = new System.Drawing.Point(573, 45);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(77, 29);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Update";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnUpdate.Location = new System.Drawing.Point(573, 45);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(77, 29);
+            this.btnUpdate.TabIndex = 4;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btnHapus
             // 
-            this.button2.Location = new System.Drawing.Point(573, 95);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(74, 29);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Hapus";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnHapus.Location = new System.Drawing.Point(573, 95);
+            this.btnHapus.Name = "btnHapus";
+            this.btnHapus.Size = new System.Drawing.Size(74, 29);
+            this.btnHapus.TabIndex = 5;
+            this.btnHapus.Text = "Hapus";
+            this.btnHapus.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // btnSimpan
             // 
-            this.button3.Location = new System.Drawing.Point(573, 143);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(77, 31);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Simpan";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnSimpan.Location = new System.Drawing.Point(573, 143);
+            this.btnSimpan.Name = "btnSimpan";
+            this.btnSimpan.Size = new System.Drawing.Size(77, 31);
+            this.btnSimpan.TabIndex = 6;
+            this.btnSimpan.Text = "Simpan";
+            this.btnSimpan.UseVisualStyleBackColor = true;
+            this.btnSimpan.Click += new System.EventHandler(this.button3_Click);
             // 
-            // dataGridView1
+            // dgvAlat
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(19, 180);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(764, 261);
-            this.dataGridView1.TabIndex = 7;
+            this.dgvAlat.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvAlat.Location = new System.Drawing.Point(19, 180);
+            this.dgvAlat.Name = "dgvAlat";
+            this.dgvAlat.Size = new System.Drawing.Size(764, 261);
+            this.dgvAlat.TabIndex = 7;
             // 
             // FormAlat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.dgvAlat);
+            this.Controls.Add(this.btnSimpan);
+            this.Controls.Add(this.btnHapus);
+            this.Controls.Add(this.btnUpdate);
+            this.Controls.Add(this.txtKondisi);
+            this.Controls.Add(this.txtNamaAlat);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "FormAlat";
             this.Text = "FormAlat";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvAlat)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -134,11 +134,11 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.TextBox txtNamaAlat;
+        private System.Windows.Forms.TextBox txtKondisi;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnHapus;
+        private System.Windows.Forms.Button btnSimpan;
+        private System.Windows.Forms.DataGridView dgvAlat;
     }
 }
