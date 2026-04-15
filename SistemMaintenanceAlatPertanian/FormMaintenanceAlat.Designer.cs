@@ -1,6 +1,6 @@
 ﻿namespace SistemMaintenanceAlatPertanian
 {
-    partial class FormMaintenanceAlat
+    partial class FormMaintenance
     {
         /// <summary>
         /// Required designer variable.
@@ -53,7 +53,6 @@
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Pilih alat";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // cbAlat
             // 
@@ -137,7 +136,7 @@
             this.btnUpdate.TabIndex = 12;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.button1_Click);
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnHapus
             // 
@@ -147,6 +146,7 @@
             this.btnHapus.TabIndex = 13;
             this.btnHapus.Text = "Hapus";
             this.btnHapus.UseVisualStyleBackColor = true;
+            this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
             // 
             // btnSimpan
             // 
@@ -156,6 +156,7 @@
             this.btnSimpan.TabIndex = 14;
             this.btnSimpan.Text = "Simpan";
             this.btnSimpan.UseVisualStyleBackColor = true;
+            this.btnSimpan.Click += new System.EventHandler(this.btnSimpan_Click);
             // 
             // dgvMaintenance
             // 
@@ -164,8 +165,10 @@
             this.dgvMaintenance.Name = "dgvMaintenance";
             this.dgvMaintenance.Size = new System.Drawing.Size(780, 192);
             this.dgvMaintenance.TabIndex = 15;
+            this.dgvMaintenance.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
+            this.dgvMaintenance.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
             // 
-            // FormMaintenanceAlat
+            // FormMaintenance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -184,9 +187,9 @@
             this.Controls.Add(this.cbTeknisi);
             this.Controls.Add(this.cbAlat);
             this.Controls.Add(this.label1);
-            this.Name = "FormMaintenanceAlat";
+            this.Name = "FormMaintenance";
             this.Text = "FormMaintenanceAlat";
-            this.Load += new System.EventHandler(this.FormMaintenanceAlat_Load);
+            this.Load += new System.EventHandler(this.FormMaintenance_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvMaintenance)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
