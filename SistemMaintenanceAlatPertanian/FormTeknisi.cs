@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace SistemMaintenanceAlatPertanian
 {
-    public partial class FormTeknisi: Form
+    public partial class txtNamaTeknisi: Form
     {
-        public FormTeknisi()
+        public txtNamaTeknisi()
         {
             InitializeComponent();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

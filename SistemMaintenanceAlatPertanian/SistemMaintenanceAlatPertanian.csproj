@@ -81,6 +81,9 @@
     <EmbeddedResource Include="FormMaintenanceAlat.resx">
       <DependentUpon>FormMaintenanceAlat.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormTeknisi.resx">
+      <DependentUpon>FormTeknisi.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
