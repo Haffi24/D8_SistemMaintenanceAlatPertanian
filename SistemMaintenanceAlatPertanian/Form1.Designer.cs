@@ -1,6 +1,6 @@
 ﻿namespace SistemMaintenanceAlatPertanian
 {
-    partial class form1
+    partial class Dashboard
     {
         /// <summary>
         /// Required designer variable.
@@ -60,7 +60,7 @@
             this.button3.Text = "Kelola Teknisi";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // form1
+            // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -68,7 +68,7 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Name = "form1";
+            this.Name = "Dashboard";
             this.Text = "Dasboard";
             this.Load += new System.EventHandler(this.Dashboard_Load);
             this.ResumeLayout(false);

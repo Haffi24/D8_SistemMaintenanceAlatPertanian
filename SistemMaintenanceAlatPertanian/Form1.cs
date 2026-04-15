@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace SistemMaintenanceAlatPertanian
 {
-    public partial class form1: Form
+    public partial class Dashboard: Form
     {
-        public form1()
+        public Dashboard()
         {
             InitializeComponent();
         }
