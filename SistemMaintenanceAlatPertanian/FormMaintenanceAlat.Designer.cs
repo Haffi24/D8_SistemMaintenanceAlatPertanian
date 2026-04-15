@@ -48,91 +48,106 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(90, 39);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label1.Location = new System.Drawing.Point(34, 46);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.Size = new System.Drawing.Size(76, 16);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Pilih alat";
+            this.label1.Text = "PILIH ALAT";
             // 
             // cbAlat
             // 
+            this.cbAlat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbAlat.FormattingEnabled = true;
-            this.cbAlat.Location = new System.Drawing.Point(164, 36);
+            this.cbAlat.Location = new System.Drawing.Point(204, 38);
             this.cbAlat.Name = "cbAlat";
-            this.cbAlat.Size = new System.Drawing.Size(271, 21);
+            this.cbAlat.Size = new System.Drawing.Size(282, 24);
             this.cbAlat.TabIndex = 3;
             // 
             // cbTeknisi
             // 
+            this.cbTeknisi.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbTeknisi.FormattingEnabled = true;
-            this.cbTeknisi.Location = new System.Drawing.Point(162, 80);
+            this.cbTeknisi.Location = new System.Drawing.Point(204, 72);
             this.cbTeknisi.Name = "cbTeknisi";
-            this.cbTeknisi.Size = new System.Drawing.Size(272, 21);
+            this.cbTeknisi.Size = new System.Drawing.Size(282, 24);
             this.cbTeknisi.TabIndex = 4;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(90, 83);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label2.Location = new System.Drawing.Point(34, 80);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 13);
+            this.label2.Size = new System.Drawing.Size(93, 16);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Pilih Teknisi";
+            this.label2.Text = "PILIH TEKNISI";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(90, 132);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label3.Location = new System.Drawing.Point(34, 111);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(92, 13);
+            this.label3.Size = new System.Drawing.Size(150, 16);
             this.label3.TabIndex = 6;
-            this.label3.Text = "tanggal perbaikan";
+            this.label3.Text = "TANGGAL PERBAIKAN";
             // 
             // dtpTanggal
             // 
-            this.dtpTanggal.Location = new System.Drawing.Point(204, 132);
+            this.dtpTanggal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpTanggal.Location = new System.Drawing.Point(204, 106);
             this.dtpTanggal.Name = "dtpTanggal";
-            this.dtpTanggal.Size = new System.Drawing.Size(200, 20);
+            this.dtpTanggal.Size = new System.Drawing.Size(282, 22);
             this.dtpTanggal.TabIndex = 7;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(90, 182);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label4.Location = new System.Drawing.Point(34, 145);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(78, 13);
+            this.label4.Size = new System.Drawing.Size(124, 16);
             this.label4.TabIndex = 8;
-            this.label4.Text = "jenis perbaikan";
+            this.label4.Text = "JENIS PERBAIKAN";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(92, 224);
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label5.Location = new System.Drawing.Point(34, 179);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 13);
+            this.label5.Size = new System.Drawing.Size(100, 16);
             this.label5.TabIndex = 9;
-            this.label5.Text = "keterangan";
+            this.label5.Text = "KETERANGAN";
             // 
             // txtJenisPerbaikan
             // 
-            this.txtJenisPerbaikan.Location = new System.Drawing.Point(192, 182);
+            this.txtJenisPerbaikan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtJenisPerbaikan.Location = new System.Drawing.Point(204, 142);
             this.txtJenisPerbaikan.Name = "txtJenisPerbaikan";
-            this.txtJenisPerbaikan.Size = new System.Drawing.Size(243, 20);
+            this.txtJenisPerbaikan.Size = new System.Drawing.Size(282, 22);
             this.txtJenisPerbaikan.TabIndex = 10;
             // 
             // txtKeterangan
             // 
-            this.txtKeterangan.Location = new System.Drawing.Point(191, 214);
+            this.txtKeterangan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtKeterangan.Location = new System.Drawing.Point(204, 174);
             this.txtKeterangan.Multiline = true;
             this.txtKeterangan.Name = "txtKeterangan";
-            this.txtKeterangan.Size = new System.Drawing.Size(243, 28);
+            this.txtKeterangan.Size = new System.Drawing.Size(282, 21);
             this.txtKeterangan.TabIndex = 11;
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(650, 39);
+            this.btnUpdate.Location = new System.Drawing.Point(623, 38);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
+            this.btnUpdate.Size = new System.Drawing.Size(115, 54);
             this.btnUpdate.TabIndex = 12;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = true;
@@ -140,9 +155,9 @@
             // 
             // btnHapus
             // 
-            this.btnHapus.Location = new System.Drawing.Point(650, 73);
+            this.btnHapus.Location = new System.Drawing.Point(623, 95);
             this.btnHapus.Name = "btnHapus";
-            this.btnHapus.Size = new System.Drawing.Size(75, 23);
+            this.btnHapus.Size = new System.Drawing.Size(115, 48);
             this.btnHapus.TabIndex = 13;
             this.btnHapus.Text = "Hapus";
             this.btnHapus.UseVisualStyleBackColor = true;
@@ -150,9 +165,9 @@
             // 
             // btnSimpan
             // 
-            this.btnSimpan.Location = new System.Drawing.Point(650, 102);
+            this.btnSimpan.Location = new System.Drawing.Point(623, 146);
             this.btnSimpan.Name = "btnSimpan";
-            this.btnSimpan.Size = new System.Drawing.Size(75, 23);
+            this.btnSimpan.Size = new System.Drawing.Size(115, 50);
             this.btnSimpan.TabIndex = 14;
             this.btnSimpan.Text = "Simpan";
             this.btnSimpan.UseVisualStyleBackColor = true;
@@ -160,10 +175,11 @@
             // 
             // dgvMaintenance
             // 
+            this.dgvMaintenance.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dgvMaintenance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMaintenance.Location = new System.Drawing.Point(11, 248);
+            this.dgvMaintenance.Location = new System.Drawing.Point(37, 225);
             this.dgvMaintenance.Name = "dgvMaintenance";
-            this.dgvMaintenance.Size = new System.Drawing.Size(780, 192);
+            this.dgvMaintenance.Size = new System.Drawing.Size(716, 213);
             this.dgvMaintenance.TabIndex = 15;
             this.dgvMaintenance.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
             this.dgvMaintenance.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
@@ -172,6 +188,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.dgvMaintenance);
             this.Controls.Add(this.btnSimpan);

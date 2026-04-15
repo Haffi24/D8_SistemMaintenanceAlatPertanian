@@ -176,5 +176,10 @@ namespace SistemMaintenanceAlatPertanian
             catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
