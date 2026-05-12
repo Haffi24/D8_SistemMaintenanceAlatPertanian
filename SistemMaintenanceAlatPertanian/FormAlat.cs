@@ -270,5 +270,37 @@ namespace SistemMaintenanceAlatPertanian
             }
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
+
+        private void txtCari_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
+
+                dgvAlat.Rows.Clear(); 
+
+                string query = "SELECT * FROM Alat WHERE nama_alat LIKE @Cari";
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@Cari", "%" + txtCari.Text + "%");
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dgvAlat.Rows.Add(
+                        reader["id_alat"].ToString(),
+                        reader["nama_alat"].ToString(),
+                        reader["kondisi_fisik"].ToString()
+                    );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal mencari data alat: " + ex.Message);
+            }
+            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
+        }
     }
 }

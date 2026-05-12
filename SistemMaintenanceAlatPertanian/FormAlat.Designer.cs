@@ -36,6 +36,8 @@
             this.btnSimpan = new System.Windows.Forms.Button();
             this.dgvAlat = new System.Windows.Forms.DataGridView();
             this.cbKondisi = new System.Windows.Forms.ComboBox();
+            this.txtCari = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlat)).BeginInit();
             this.SuspendLayout();
             // 
@@ -119,12 +121,33 @@
             this.cbKondisi.Size = new System.Drawing.Size(239, 21);
             this.cbKondisi.TabIndex = 8;
             // 
+            // txtCari
+            // 
+            this.txtCari.Location = new System.Drawing.Point(175, 121);
+            this.txtCari.Name = "txtCari";
+            this.txtCari.Size = new System.Drawing.Size(239, 20);
+            this.txtCari.TabIndex = 9;
+            this.txtCari.TextChanged += new System.EventHandler(this.txtCari_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label3.Location = new System.Drawing.Point(42, 125);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(50, 16);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Search";
+            // 
             // FormAlat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtCari);
             this.Controls.Add(this.cbKondisi);
             this.Controls.Add(this.dgvAlat);
             this.Controls.Add(this.btnSimpan);
@@ -152,5 +175,7 @@
         private System.Windows.Forms.Button btnSimpan;
         private System.Windows.Forms.DataGridView dgvAlat;
         private System.Windows.Forms.ComboBox cbKondisi;
+        private System.Windows.Forms.TextBox txtCari;
+        private System.Windows.Forms.Label label3;
     }
 }
