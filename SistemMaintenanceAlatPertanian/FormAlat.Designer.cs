@@ -31,11 +31,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtNamaAlat = new System.Windows.Forms.TextBox();
-            this.txtKondisi = new System.Windows.Forms.TextBox();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnHapus = new System.Windows.Forms.Button();
             this.btnSimpan = new System.Windows.Forms.Button();
             this.dgvAlat = new System.Windows.Forms.DataGridView();
+            this.cbKondisi = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlat)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,15 +70,6 @@
             this.txtNamaAlat.Name = "txtNamaAlat";
             this.txtNamaAlat.Size = new System.Drawing.Size(239, 22);
             this.txtNamaAlat.TabIndex = 2;
-            // 
-            // txtKondisi
-            // 
-            this.txtKondisi.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtKondisi.Location = new System.Drawing.Point(175, 80);
-            this.txtKondisi.Name = "txtKondisi";
-            this.txtKondisi.Size = new System.Drawing.Size(239, 22);
-            this.txtKondisi.TabIndex = 3;
-            this.txtKondisi.Click += new System.EventHandler(this.FormAlat_Load);
             // 
             // btnUpdate
             // 
@@ -120,17 +111,25 @@
             this.dgvAlat.TabIndex = 7;
             this.dgvAlat.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAlat_CellClick);
             // 
+            // cbKondisi
+            // 
+            this.cbKondisi.FormattingEnabled = true;
+            this.cbKondisi.Location = new System.Drawing.Point(175, 81);
+            this.cbKondisi.Name = "cbKondisi";
+            this.cbKondisi.Size = new System.Drawing.Size(239, 21);
+            this.cbKondisi.TabIndex = 8;
+            // 
             // FormAlat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.cbKondisi);
             this.Controls.Add(this.dgvAlat);
             this.Controls.Add(this.btnSimpan);
             this.Controls.Add(this.btnHapus);
             this.Controls.Add(this.btnUpdate);
-            this.Controls.Add(this.txtKondisi);
             this.Controls.Add(this.txtNamaAlat);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -148,10 +147,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtNamaAlat;
-        private System.Windows.Forms.TextBox txtKondisi;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnHapus;
         private System.Windows.Forms.Button btnSimpan;
         private System.Windows.Forms.DataGridView dgvAlat;
+        private System.Windows.Forms.ComboBox cbKondisi;
     }
 }

@@ -9,38 +9,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
 namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormAlat : Form
     {
-        // Variabel Koneksi 
+
         private readonly SqlConnection conn;
-        
+
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
 
-        private string idAlatTerpilih = ""; 
+        private string idAlatTerpilih = "";
 
-        // Constructor 
+
         public FormAlat()
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
         }
 
-   
+
         private void label1_Click(object sender, EventArgs e) { }
         private void label2_Click(object sender, EventArgs e) { }
-       
+
         private void ClearForm()
         {
             txtNamaAlat.Clear();
-            txtKondisi.Clear();
+            
+            cbKondisi.SelectedIndex = -1;
             idAlatTerpilih = "";
             txtNamaAlat.Focus();
         }
 
-        // Method Menampilkan Data dengan SqlDataReader
+
         private void TampilData()
         {
             try
@@ -53,7 +53,7 @@ namespace SistemMaintenanceAlatPertanian
                 dgvAlat.Rows.Clear();
                 dgvAlat.Columns.Clear();
 
-                // Menambahkan kolom secara manual 
+
                 dgvAlat.Columns.Add("id_alat", "ID Alat");
                 dgvAlat.Columns.Add("nama_alat", "Nama Alat");
                 dgvAlat.Columns.Add("kondisi_fisik", "Kondisi Fisik");
@@ -76,49 +76,59 @@ namespace SistemMaintenanceAlatPertanian
             {
                 MessageBox.Show("Gagal menampilkan data: " + ex.Message);
             }
+            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
-        // Event Form_Load
+
         private void FormAlat_Load(object sender, EventArgs e)
         {
-            // Pengaturan DataGridView 
+
             dgvAlat.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAlat.MultiSelect = false;
             dgvAlat.ReadOnly = true;
             dgvAlat.AllowUserToAddRows = false;
             dgvAlat.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            // Panggil method tampil data
+            
+            cbKondisi.Items.Clear();
+            cbKondisi.Items.Add("Bagus");
+            cbKondisi.Items.Add("Perlu Perawatan");
+            cbKondisi.DropDownStyle = ComboBoxStyle.DropDownList; 
+
             TampilData();
         }
 
-      
+
         private void btnSimpan_Click(object sender, EventArgs e)
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(txtNamaAlat.Text))
+                {
+                    MessageBox.Show("Nama Alat harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNamaAlat.Focus();
+                    return;
+                }
+
+                
+                if (cbKondisi.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Silakan pilih Kondisi Alat terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cbKondisi.Focus();
+                    return;
+                }
+
                 if (conn.State == System.Data.ConnectionState.Closed)
                 {
                     conn.Open();
                 }
 
-                if (txtNamaAlat.Text == "")
-                {
-                    MessageBox.Show("Nama Alat harus diisi");
-                    txtNamaAlat.Focus();
-                    return;
-                }
-                if (txtKondisi.Text == "")
-                {
-                    MessageBox.Show("Kondisi Alat harus diisi");
-                    txtKondisi.Focus();
-                    return;
-                }
-
                 string query = "INSERT INTO Alat (nama_alat, kondisi_fisik) VALUES (@Nama, @Kondisi)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Nama", txtNamaAlat.Text);
-                cmd.Parameters.AddWithValue("@Kondisi", txtKondisi.Text);
+
+                
+                cmd.Parameters.AddWithValue("@Kondisi", cbKondisi.SelectedItem.ToString());
 
                 int result = cmd.ExecuteNonQuery();
 
@@ -137,9 +147,10 @@ namespace SistemMaintenanceAlatPertanian
             {
                 MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
+            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
-        // Event Cell Click 
+
         private void dgvAlat_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -147,7 +158,9 @@ namespace SistemMaintenanceAlatPertanian
                 DataGridViewRow row = dgvAlat.Rows[e.RowIndex];
                 idAlatTerpilih = row.Cells["id_alat"].Value.ToString();
                 txtNamaAlat.Text = row.Cells["nama_alat"].Value.ToString();
-                txtKondisi.Text = row.Cells["kondisi_fisik"].Value.ToString();
+
+                
+                cbKondisi.Text = row.Cells["kondisi_fisik"].Value.ToString();
             }
         }
 
@@ -156,6 +169,27 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
+                if (idAlatTerpilih == "")
+                {
+                    MessageBox.Show("Pilih data dari tabel dulu!");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtNamaAlat.Text))
+                {
+                    MessageBox.Show("Nama Alat harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNamaAlat.Focus();
+                    return;
+                }
+
+                
+                if (cbKondisi.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Silakan pilih Kondisi Alat terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cbKondisi.Focus();
+                    return;
+                }
+
                 if (conn.State == System.Data.ConnectionState.Closed)
                 {
                     conn.Open();
@@ -164,7 +198,9 @@ namespace SistemMaintenanceAlatPertanian
                 string query = @"UPDATE Alat SET nama_alat = @Nama, kondisi_fisik = @Kondisi WHERE id_alat = @ID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Nama", txtNamaAlat.Text);
-                cmd.Parameters.AddWithValue("@Kondisi", txtKondisi.Text);
+
+                
+                cmd.Parameters.AddWithValue("@Kondisi", cbKondisi.SelectedItem.ToString());
                 cmd.Parameters.AddWithValue("@ID", idAlatTerpilih);
 
                 int result = cmd.ExecuteNonQuery();
@@ -184,15 +220,17 @@ namespace SistemMaintenanceAlatPertanian
             {
                 MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
+            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                if (idAlatTerpilih == "")
                 {
-                    conn.Open();
+                    MessageBox.Show("Pilih data dari tabel dulu!");
+                    return;
                 }
 
                 DialogResult resultConfirm = MessageBox.Show(
@@ -203,6 +241,11 @@ namespace SistemMaintenanceAlatPertanian
 
                 if (resultConfirm == DialogResult.Yes)
                 {
+                    if (conn.State == System.Data.ConnectionState.Closed)
+                    {
+                        conn.Open();
+                    }
+
                     string query = "DELETE FROM Alat WHERE id_alat = @ID";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@ID", idAlatTerpilih);
@@ -225,6 +268,7 @@ namespace SistemMaintenanceAlatPertanian
             {
                 MessageBox.Show("Terjadi kesalahan: " + ex.Message);
             }
+            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
     }
 }
