@@ -118,3 +118,15 @@ BEGIN
     WHERE id_teknisi = @id_teknisi;
 END;
 GO
+
+--sp search teknisi
+CREATE PROCEDURE sp_SearchTeknisi
+    @Keyword VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT * FROM vwTeknisiPublic 
+    WHERE nama_teknisi LIKE '%' + @Keyword + '%';
+END;
+GO
