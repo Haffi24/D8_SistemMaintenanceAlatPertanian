@@ -104,3 +104,17 @@ BEGIN
     WHERE id_teknisi = @id_teknisi;
 END;
 GO
+
+
+
+--sp delete teknisi
+CREATE PROCEDURE sp_DeleteTeknisi
+    @id_teknisi INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DELETE FROM Teknisi 
+    WHERE id_teknisi = @id_teknisi;
+END;
+GO
