@@ -14,6 +14,9 @@ namespace SistemMaintenanceAlatPertanian
     public partial class FormTeknisi : Form
     {
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
+
+        private BindingSource bindingSource = new BindingSource();
+        private DataTable dtTeknisi = new DataTable();
         private string idTeknisiTerpilih = "";
 
         public FormTeknisi()
@@ -21,7 +24,6 @@ namespace SistemMaintenanceAlatPertanian
             InitializeComponent();
         }
 
-       
         private void label1_Click(object sender, EventArgs e) { }
 
         private void ClearForm()
@@ -31,25 +33,36 @@ namespace SistemMaintenanceAlatPertanian
             txtNamaTeknisi.Focus();
         }
 
+        private void BindControls()
+        {
+            txtNamaTeknisi.DataBindings.Clear();
+
+            txtNamaTeknisi.DataBindings.Add("Text", bindingSource, "nama_teknisi", true, DataSourceUpdateMode.OnPropertyChanged);
+        }
+
         private void TampilData()
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     string query = "SELECT * FROM vwTeknisiPublic";
-                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-
-                    dgvTeknisi.DataSource = dt;
-
-                    
-                    if (dgvTeknisi.Columns.Count > 0)
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
                     {
-                        dgvTeknisi.Columns["id_teknisi"].HeaderText = "ID Teknisi";
-                        dgvTeknisi.Columns["nama_teknisi"].HeaderText = "Nama Teknisi";
+                        dtTeknisi = new DataTable();
+                        da.Fill(dtTeknisi);
+
+                        bindingSource.DataSource = dtTeknisi;
+
+                        dgvTeknisi.DataSource = bindingSource;
+
+                        if (dgvTeknisi.Columns.Count > 0)
+                        {
+                            dgvTeknisi.Columns["id_teknisi"].HeaderText = "ID Teknisi";
+                            dgvTeknisi.Columns["nama_teknisi"].HeaderText = "Nama Teknisi";
+                        }
+
+                        BindControls();
                     }
                 }
             }
@@ -61,6 +74,9 @@ namespace SistemMaintenanceAlatPertanian
 
         private void FormTeknisi_Load(object sender, EventArgs e)
         {
+            bindingNavigator1.BindingSource = bindingSource;
+
+            // Pengaturan visual DataGridView
             dgvTeknisi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTeknisi.MultiSelect = false;
             dgvTeknisi.ReadOnly = true;
@@ -72,7 +88,7 @@ namespace SistemMaintenanceAlatPertanian
 
         private void txtNamaTeknisi_KeyPress(object sender, KeyPressEventArgs e)
         {
-            
+            // Validasi input: hanya huruf, tombol kontrol (backspace), dan spasi
             if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
             {
                 e.Handled = true;
@@ -91,7 +107,6 @@ namespace SistemMaintenanceAlatPertanian
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     using (SqlCommand cmd = new SqlCommand("sp_InsertTeknisi", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -101,7 +116,6 @@ namespace SistemMaintenanceAlatPertanian
                         cmd.ExecuteNonQuery();
 
                         MessageBox.Show("Data teknisi berhasil ditambahkan");
-                        ClearForm();
                         TampilData();
                     }
                 }
@@ -109,21 +123,18 @@ namespace SistemMaintenanceAlatPertanian
             catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
         }
 
-        private void dgvTeknisi_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                DataGridViewRow row = dgvTeknisi.Rows[e.RowIndex];
-                idTeknisiTerpilih = row.Cells["id_teknisi"].Value.ToString();
-                txtNamaTeknisi.Text = row.Cells["nama_teknisi"].Value.ToString();
-            }
-        }
-
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(idTeknisiTerpilih))
+            DataRowView currentRecord = (DataRowView)bindingSource.Current;
+            if (currentRecord == null)
             {
                 MessageBox.Show("Pilih data teknisi dari tabel dulu!");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtNamaTeknisi.Text))
+            {
+                MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -131,18 +142,16 @@ namespace SistemMaintenanceAlatPertanian
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     using (SqlCommand cmd = new SqlCommand("sp_UpdateTeknisi", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id_teknisi", idTeknisiTerpilih);
+                        cmd.Parameters.AddWithValue("@id_teknisi", currentRecord["id_teknisi"]);
                         cmd.Parameters.AddWithValue("@nama_teknisi", txtNamaTeknisi.Text);
 
                         conn.Open();
                         cmd.ExecuteNonQuery();
 
                         MessageBox.Show("Data berhasil diupdate");
-                        ClearForm();
                         TampilData();
                     }
                 }
@@ -152,7 +161,8 @@ namespace SistemMaintenanceAlatPertanian
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(idTeknisiTerpilih))
+            DataRowView currentRecord = (DataRowView)bindingSource.Current;
+            if (currentRecord == null)
             {
                 MessageBox.Show("Pilih data teknisi dari tabel dulu!");
                 return;
@@ -164,17 +174,15 @@ namespace SistemMaintenanceAlatPertanian
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        
                         using (SqlCommand cmd = new SqlCommand("sp_DeleteTeknisi", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@id_teknisi", idTeknisiTerpilih);
+                            cmd.Parameters.AddWithValue("@id_teknisi", currentRecord["id_teknisi"]);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
 
                             MessageBox.Show("Data berhasil dihapus");
-                            ClearForm();
                             TampilData();
                         }
                     }
@@ -189,22 +197,34 @@ namespace SistemMaintenanceAlatPertanian
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     using (SqlCommand cmd = new SqlCommand("sp_SearchTeknisi", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@Keyword", txtCari.Text);
 
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-                        dgvTeknisi.DataSource = dt;
+                        DataTable dtResults = new DataTable();
+                        da.Fill(dtResults);
+
+                        bindingSource.DataSource = dtResults;
                     }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal mencari data teknisi: " + ex.Message);
+            }
+        }
+
+        private void dgvTeknisi_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataRowView row = (DataRowView)bindingSource.Current;
+                if (row != null)
+                {
+                    idTeknisiTerpilih = row["id_teknisi"].ToString();
+                }
             }
         }
     }
