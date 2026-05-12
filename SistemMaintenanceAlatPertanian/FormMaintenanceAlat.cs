@@ -13,11 +13,11 @@ namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormMaintenance : Form
     {
-        // (Integrated Security=True)
+
         private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
 
-        private string idMaintenanceTerpilih = ""; 
+        private string idMaintenanceTerpilih = "";
 
         public FormMaintenance()
         {
@@ -25,19 +25,19 @@ namespace SistemMaintenanceAlatPertanian
             conn = new SqlConnection(connectionString);
         }
 
-       
+
         private void ClearForm()
         {
             cbAlat.SelectedIndex = -1;
             cbTeknisi.SelectedIndex = -1;
-            dtpTanggal.Value = DateTime.Now;
-            txtJenisPerbaikan.Clear();
+            cbJenisPerbaikan.SelectedIndex = -1;
+            dtpTanggal.Value = DateTime.Today;
             txtKeterangan.Clear();
             idMaintenanceTerpilih = "";
             cbAlat.Focus();
         }
 
-   
+
         private void LoadAlat()
         {
             try
@@ -59,7 +59,7 @@ namespace SistemMaintenanceAlatPertanian
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
-    
+
         private void LoadTeknisi()
         {
             try
@@ -81,7 +81,7 @@ namespace SistemMaintenanceAlatPertanian
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
-    
+
         private void TampilData()
         {
             try
@@ -91,7 +91,7 @@ namespace SistemMaintenanceAlatPertanian
                 dgvMaintenance.Rows.Clear();
                 dgvMaintenance.Columns.Clear();
 
-               
+
                 dgvMaintenance.Columns.Add("id_m", "ID");
                 dgvMaintenance.Columns.Add("alat", "Nama Alat");
                 dgvMaintenance.Columns.Add("teknisi", "Teknisi");
@@ -126,7 +126,7 @@ namespace SistemMaintenanceAlatPertanian
 
         private void FormMaintenance_Load(object sender, EventArgs e)
         {
-            
+
             dgvMaintenance.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvMaintenance.MultiSelect = false;
             dgvMaintenance.ReadOnly = true;
@@ -138,19 +138,30 @@ namespace SistemMaintenanceAlatPertanian
             dtpTanggal.MaxDate = DateTime.Today;
 
 
+            cbJenisPerbaikan.Items.Clear();
+            cbJenisPerbaikan.Items.Add("Perbaikan Ringan");
+            cbJenisPerbaikan.Items.Add("Perbaikan Berat");
+
+
+            cbJenisPerbaikan.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbAlat.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbTeknisi.DropDownStyle = ComboBoxStyle.DropDownList;
+
+
             LoadAlat();
             LoadTeknisi();
             TampilData();
         }
 
-      
+
         private void btnSimpan_Click(object sender, EventArgs e)
         {
             try
             {
-                if (cbAlat.SelectedValue == null || cbTeknisi.SelectedValue == null || txtJenisPerbaikan.Text == "")
+
+                if (cbAlat.SelectedIndex == -1 || cbTeknisi.SelectedIndex == -1 || cbJenisPerbaikan.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Alat, Teknisi, dan Jenis Perbaikan wajib diisi!");
+                    MessageBox.Show("Alat, Teknisi, dan Jenis Perbaikan wajib dipilih!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -161,7 +172,8 @@ namespace SistemMaintenanceAlatPertanian
                 cmd.Parameters.AddWithValue("@idA", cbAlat.SelectedValue);
                 cmd.Parameters.AddWithValue("@idT", cbTeknisi.SelectedValue);
                 cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value.Date);
-                cmd.Parameters.AddWithValue("@jenis", txtJenisPerbaikan.Text);
+
+                cmd.Parameters.AddWithValue("@jenis", cbJenisPerbaikan.SelectedItem.ToString());
                 cmd.Parameters.AddWithValue("@ket", txtKeterangan.Text);
 
                 if (cmd.ExecuteNonQuery() > 0)
@@ -184,17 +196,26 @@ namespace SistemMaintenanceAlatPertanian
                 cbAlat.Text = row.Cells["alat"].Value.ToString();
                 cbTeknisi.Text = row.Cells["teknisi"].Value.ToString();
                 dtpTanggal.Value = Convert.ToDateTime(row.Cells["tgl"].Value);
-                txtJenisPerbaikan.Text = row.Cells["jenis"].Value.ToString();
+
+
+                cbJenisPerbaikan.Text = row.Cells["jenis"].Value.ToString();
                 txtKeterangan.Text = row.Cells["ket"].Value.ToString();
             }
         }
 
-   
+
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             try
             {
                 if (idMaintenanceTerpilih == "") { MessageBox.Show("Pilih data dari tabel dulu!"); return; }
+
+
+                if (cbAlat.SelectedIndex == -1 || cbTeknisi.SelectedIndex == -1 || cbJenisPerbaikan.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Alat, Teknisi, dan Jenis Perbaikan wajib dipilih!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
 
@@ -203,7 +224,9 @@ namespace SistemMaintenanceAlatPertanian
                 cmd.Parameters.AddWithValue("@idA", cbAlat.SelectedValue);
                 cmd.Parameters.AddWithValue("@idT", cbTeknisi.SelectedValue);
                 cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value.Date);
-                cmd.Parameters.AddWithValue("@jenis", txtJenisPerbaikan.Text);
+
+
+                cmd.Parameters.AddWithValue("@jenis", cbJenisPerbaikan.SelectedItem.ToString());
                 cmd.Parameters.AddWithValue("@ket", txtKeterangan.Text);
                 cmd.Parameters.AddWithValue("@id", idMaintenanceTerpilih);
 
@@ -218,7 +241,7 @@ namespace SistemMaintenanceAlatPertanian
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
-        // Event Tombol Hapus sesuai Modul
+
         private void btnHapus_Click(object sender, EventArgs e)
         {
             try
@@ -244,6 +267,48 @@ namespace SistemMaintenanceAlatPertanian
                 }
             }
             catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
+        }
+
+        private void txtCari_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
+
+                dgvMaintenance.Rows.Clear(); 
+
+                
+                string query = @"SELECT m.id_maintenance, a.nama_alat, t.nama_teknisi, m.tgl_service, m.jenis_perbaikan, m.keterangan 
+                         FROM Maintenance m 
+                         JOIN Alat a ON m.id_alat = a.id_alat 
+                         JOIN Teknisi t ON m.id_teknisi = t.id_teknisi
+                         WHERE a.nama_alat LIKE @Cari OR t.nama_teknisi LIKE @Cari";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@Cari", "%" + txtCari.Text + "%");
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                   
+                    dgvMaintenance.Rows.Add(
+                        reader["id_maintenance"].ToString(),
+                        reader["nama_alat"].ToString(),
+                        reader["nama_teknisi"].ToString(),
+                        Convert.ToDateTime(reader["tgl_service"]).ToShortDateString(),
+                        reader["jenis_perbaikan"].ToString(),
+                        reader["keterangan"].ToString()
+                    );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal mencari data: " + ex.Message);
+            }
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
     }

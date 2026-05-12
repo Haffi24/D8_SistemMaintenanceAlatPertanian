@@ -36,12 +36,14 @@
             this.dtpTanggal = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtJenisPerbaikan = new System.Windows.Forms.TextBox();
             this.txtKeterangan = new System.Windows.Forms.TextBox();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnHapus = new System.Windows.Forms.Button();
             this.btnSimpan = new System.Windows.Forms.Button();
             this.dgvMaintenance = new System.Windows.Forms.DataGridView();
+            this.cbJenisPerbaikan = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtCari = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMaintenance)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,14 +128,6 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "KETERANGAN";
             // 
-            // txtJenisPerbaikan
-            // 
-            this.txtJenisPerbaikan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtJenisPerbaikan.Location = new System.Drawing.Point(204, 142);
-            this.txtJenisPerbaikan.Name = "txtJenisPerbaikan";
-            this.txtJenisPerbaikan.Size = new System.Drawing.Size(282, 22);
-            this.txtJenisPerbaikan.TabIndex = 10;
-            // 
             // txtKeterangan
             // 
             this.txtKeterangan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -177,12 +171,39 @@
             // 
             this.dgvMaintenance.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dgvMaintenance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMaintenance.Location = new System.Drawing.Point(37, 225);
+            this.dgvMaintenance.Location = new System.Drawing.Point(37, 227);
             this.dgvMaintenance.Name = "dgvMaintenance";
             this.dgvMaintenance.Size = new System.Drawing.Size(716, 213);
             this.dgvMaintenance.TabIndex = 15;
             this.dgvMaintenance.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
             this.dgvMaintenance.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
+            // 
+            // cbJenisPerbaikan
+            // 
+            this.cbJenisPerbaikan.FormattingEnabled = true;
+            this.cbJenisPerbaikan.Location = new System.Drawing.Point(204, 140);
+            this.cbJenisPerbaikan.Name = "cbJenisPerbaikan";
+            this.cbJenisPerbaikan.Size = new System.Drawing.Size(282, 21);
+            this.cbJenisPerbaikan.TabIndex = 16;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label6.Location = new System.Drawing.Point(34, 206);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(61, 16);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Cari data";
+            // 
+            // txtCari
+            // 
+            this.txtCari.Location = new System.Drawing.Point(204, 201);
+            this.txtCari.Name = "txtCari";
+            this.txtCari.Size = new System.Drawing.Size(282, 20);
+            this.txtCari.TabIndex = 19;
+            this.txtCari.TextChanged += new System.EventHandler(this.txtCari_TextChanged);
             // 
             // FormMaintenance
             // 
@@ -190,12 +211,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.txtCari);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.cbJenisPerbaikan);
             this.Controls.Add(this.dgvMaintenance);
             this.Controls.Add(this.btnSimpan);
             this.Controls.Add(this.btnHapus);
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.txtKeterangan);
-            this.Controls.Add(this.txtJenisPerbaikan);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.dtpTanggal);
@@ -223,11 +246,13 @@
         private System.Windows.Forms.DateTimePicker dtpTanggal;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtJenisPerbaikan;
         private System.Windows.Forms.TextBox txtKeterangan;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnHapus;
         private System.Windows.Forms.Button btnSimpan;
         private System.Windows.Forms.DataGridView dgvMaintenance;
+        private System.Windows.Forms.ComboBox cbJenisPerbaikan;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtCari;
     }
 }
