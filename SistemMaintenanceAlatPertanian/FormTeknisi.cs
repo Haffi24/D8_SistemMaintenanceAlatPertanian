@@ -76,7 +76,6 @@ namespace SistemMaintenanceAlatPertanian
         {
             bindingNavigator1.BindingSource = bindingSource;
 
-            // Pengaturan visual DataGridView
             dgvTeknisi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTeknisi.MultiSelect = false;
             dgvTeknisi.ReadOnly = true;
@@ -88,7 +87,6 @@ namespace SistemMaintenanceAlatPertanian
 
         private void txtNamaTeknisi_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Validasi input: hanya huruf, tombol kontrol (backspace), dan spasi
             if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
             {
                 e.Handled = true;

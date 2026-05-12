@@ -222,5 +222,92 @@ namespace SistemMaintenanceAlatPertanian
                 }
             }
         }
+
+        private void btnTestInjection_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE Alat SET nama_alat = 'DIRETAS' WHERE nama_alat = '" + txtNamaAlat.Text + "'";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        int result = cmd.ExecuteNonQuery();
+                        MessageBox.Show(result + " baris terupdate");
+                    }
+                }
+                TampilData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void buttonreset_click(object sender, EventArgs e)
+        {
+            DialogResult dialog = MessageBox.Show("Apakah Anda yakin ingin mengembalikan seluruh data ke kondisi awal (Backup)? Semua perubahan saat ini akan hilang.",
+                "Konfirmasi Reset Data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (dialog == DialogResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+
+                        string query = @"
+                    -- 1. Reset Tabel Maintenance
+                    IF OBJECT_ID('dbo.Maintenance_Backup') IS NOT NULL
+                    BEGIN
+                        DELETE FROM dbo.Maintenance;
+                        
+                        SET IDENTITY_INSERT dbo.Maintenance ON;
+                        INSERT INTO dbo.Maintenance (id_maintenance, id_alat, id_teknisi, tgl_service, jenis_perbaikan, keterangan) 
+                        SELECT id_maintenance, id_alat, id_teknisi, tgl_service, jenis_perbaikan, keterangan FROM dbo.Maintenance_Backup;
+                        SET IDENTITY_INSERT dbo.Maintenance OFF;
+                    END
+
+                    -- 2. Reset Tabel Alat
+                    IF OBJECT_ID('dbo.Alat_Backup') IS NOT NULL
+                    BEGIN
+                        DELETE FROM dbo.Alat;
+                        
+                        SET IDENTITY_INSERT dbo.Alat ON;
+                        INSERT INTO dbo.Alat (id_alat, nama_alat, kondisi_fisik) 
+                        SELECT id_alat, nama_alat, kondisi_fisik FROM dbo.Alat_Backup;
+                        SET IDENTITY_INSERT dbo.Alat OFF;
+                    END
+
+                    -- 3. Reset Tabel Teknisi
+                    IF OBJECT_ID('dbo.Teknisi_Backup') IS NOT NULL
+                    BEGIN
+                        DELETE FROM dbo.Teknisi;
+                        
+                        SET IDENTITY_INSERT dbo.Teknisi ON;
+                        INSERT INTO dbo.Teknisi (id_teknisi, nama_teknisi) 
+                        SELECT id_teknisi, nama_teknisi FROM dbo.Teknisi_Backup;
+                        SET IDENTITY_INSERT dbo.Teknisi OFF;
+                    END";
+
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    MessageBox.Show("Data berhasil direset ke kondisi backup.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    TampilData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Terjadi kesalahan saat proses reset: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }
