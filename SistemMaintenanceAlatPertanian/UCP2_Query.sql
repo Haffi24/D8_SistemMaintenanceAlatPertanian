@@ -91,4 +91,16 @@ BEGIN
 END;
 GO
 
-
+--sp update teknisi
+CREATE PROCEDURE sp_UpdateTeknisi
+    @id_teknisi INT,
+    @nama_teknisi VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    UPDATE Teknisi 
+    SET nama_teknisi = @nama_teknisi 
+    WHERE id_teknisi = @id_teknisi;
+END;
+GO
