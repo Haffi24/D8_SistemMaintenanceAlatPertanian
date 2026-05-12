@@ -148,4 +148,23 @@ BEGIN
 END;
 GO
 
---
+--sp update maintenance
+CREATE PROCEDURE sp_UpdateMaintenance
+    @id_maintenance INT,
+    @id_alat INT,
+    @id_teknisi INT,
+    @tgl_service DATE,
+    @jenis_perbaikan VARCHAR(255),
+    @keterangan TEXT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE Maintenance 
+    SET id_alat = @id_alat, 
+        id_teknisi = @id_teknisi, 
+        tgl_service = @tgl_service, 
+        jenis_perbaikan = @jenis_perbaikan, 
+        keterangan = @keterangan 
+    WHERE id_maintenance = @id_maintenance;
+END;
+GO
