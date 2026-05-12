@@ -51,3 +51,14 @@ BEGIN
     UPDATE Alat SET nama_alat = @nama_alat, kondisi_fisik = @kondisi_fisik WHERE id_alat = @id_alat;
 END;
 GO
+
+
+--sp delete
+CREATE PROCEDURE sp_DeleteAlat
+    @id_alat INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM Alat WHERE id_alat = @id_alat;
+END;
+GO
