@@ -219,11 +219,12 @@ namespace SistemMaintenanceAlatPertanian
             {
                 if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
 
-                dgvTeknisi.Rows.Clear();
+                dgvTeknisi.Rows.Clear(); 
+               
+                string query = "SELECT * FROM Teknisi WHERE nama_teknisi LIKE @Cari OR CAST(id_teknisi AS VARCHAR) LIKE @Cari";
+                
 
-                string query = "SELECT * FROM Teknisi WHERE nama_teknisi LIKE @Cari";
                 SqlCommand cmd = new SqlCommand(query, conn);
-
                 cmd.Parameters.AddWithValue("@Cari", "%" + txtCari.Text + "%");
 
                 SqlDataReader reader = cmd.ExecuteReader();

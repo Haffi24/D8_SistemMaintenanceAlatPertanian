@@ -277,9 +277,9 @@ namespace SistemMaintenanceAlatPertanian
             {
                 if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
 
-                dgvAlat.Rows.Clear(); 
+                dgvAlat.Rows.Clear();
 
-                string query = "SELECT * FROM Alat WHERE nama_alat LIKE @Cari";
+                string query = "SELECT * FROM Alat WHERE nama_alat LIKE @Cari OR CAST(id_alat AS VARCHAR) LIKE @Cari";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
                 cmd.Parameters.AddWithValue("@Cari", "%" + txtCari.Text + "%");

@@ -193,9 +193,9 @@
             this.label6.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.label6.Location = new System.Drawing.Point(34, 206);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(61, 16);
+            this.label6.Size = new System.Drawing.Size(50, 16);
             this.label6.TabIndex = 17;
-            this.label6.Text = "Cari data";
+            this.label6.Text = "Search";
             // 
             // txtCari
             // 
