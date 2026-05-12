@@ -38,3 +38,16 @@ BEGIN
     VALUES (@nama_alat, @kondisi_fisik);
 END;
 GO
+
+
+--sp update
+CREATE PROCEDURE sp_UpdateAlat
+    @id_alat INT,
+    @nama_alat VARCHAR(100),
+    @kondisi_fisik VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE Alat SET nama_alat = @nama_alat, kondisi_fisik = @kondisi_fisik WHERE id_alat = @id_alat;
+END;
+GO
