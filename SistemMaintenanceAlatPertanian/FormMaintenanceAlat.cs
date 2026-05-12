@@ -1,30 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormMaintenance : Form
     {
-
-        private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
-
         private string idMaintenanceTerpilih = "";
 
         public FormMaintenance()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
         }
-
 
         private void ClearForm()
         {
@@ -37,154 +26,208 @@ namespace SistemMaintenanceAlatPertanian
             cbAlat.Focus();
         }
 
-
         private void LoadAlat()
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-                string query = "SELECT id_alat, nama_alat FROM Alat";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    
+                    string query = "SELECT * FROM vwAlatPublic";
+                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
 
-                System.Data.DataTable dt = new System.Data.DataTable();
-                dt.Load(reader);
-                cbAlat.DataSource = dt;
-                cbAlat.DisplayMember = "nama_alat";
-                cbAlat.ValueMember = "id_alat";
-                cbAlat.SelectedIndex = -1;
-                reader.Close();
+                    cbAlat.DataSource = dt;
+                    cbAlat.DisplayMember = "nama_alat";
+                    cbAlat.ValueMember = "id_alat";
+                    cbAlat.SelectedIndex = -1;
+                }
             }
             catch (Exception ex) { MessageBox.Show("Gagal Load Alat: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
-
 
         private void LoadTeknisi()
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-                string query = "SELECT id_teknisi, nama_teknisi FROM Teknisi";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    
+                    string query = "SELECT * FROM vwTeknisiPublic";
+                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
 
-                System.Data.DataTable dt = new System.Data.DataTable();
-                dt.Load(reader);
-                cbTeknisi.DataSource = dt;
-                cbTeknisi.DisplayMember = "nama_teknisi";
-                cbTeknisi.ValueMember = "id_teknisi";
-                cbTeknisi.SelectedIndex = -1;
-                reader.Close();
+                    cbTeknisi.DataSource = dt;
+                    cbTeknisi.DisplayMember = "nama_teknisi";
+                    cbTeknisi.ValueMember = "id_teknisi";
+                    cbTeknisi.SelectedIndex = -1;
+                }
             }
             catch (Exception ex) { MessageBox.Show("Gagal Load Teknisi: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
-
 
         private void TampilData()
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                dgvMaintenance.Rows.Clear();
-                dgvMaintenance.Columns.Clear();
-
-
-                dgvMaintenance.Columns.Add("id_m", "ID");
-                dgvMaintenance.Columns.Add("alat", "Nama Alat");
-                dgvMaintenance.Columns.Add("teknisi", "Teknisi");
-                dgvMaintenance.Columns.Add("tgl", "Tanggal");
-                dgvMaintenance.Columns.Add("jenis", "Jenis Perbaikan");
-                dgvMaintenance.Columns.Add("ket", "Keterangan");
-
-                string query = @"SELECT m.id_maintenance, a.nama_alat, t.nama_teknisi, m.tgl_service, m.jenis_perbaikan, m.keterangan 
-                                 FROM Maintenance m 
-                                 JOIN Alat a ON m.id_alat = a.id_alat 
-                                 JOIN Teknisi t ON m.id_teknisi = t.id_teknisi";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    dgvMaintenance.Rows.Add(
-                        reader["id_maintenance"].ToString(),
-                        reader["nama_alat"].ToString(),
-                        reader["nama_teknisi"].ToString(),
-                        Convert.ToDateTime(reader["tgl_service"]).ToShortDateString(),
-                        reader["jenis_perbaikan"].ToString(),
-                        reader["keterangan"].ToString()
-                    );
+                    
+                    string query = "SELECT * FROM vwDetailMaintenance";
+                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvMaintenance.DataSource = dt;
+
+                    
+                    dgvMaintenance.Columns["id_maintenance"].HeaderText = "ID";
+                    dgvMaintenance.Columns["nama_alat"].HeaderText = "Nama Alat";
+                    dgvMaintenance.Columns["nama_teknisi"].HeaderText = "Teknisi";
+                    dgvMaintenance.Columns["tgl_service"].HeaderText = "Tanggal";
+                    dgvMaintenance.Columns["jenis_perbaikan"].HeaderText = "Jenis Perbaikan";
+                    dgvMaintenance.Columns["keterangan"].HeaderText = "Keterangan";
                 }
-                reader.Close();
             }
             catch (Exception ex) { MessageBox.Show("Gagal menampilkan data: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
         private void FormMaintenance_Load(object sender, EventArgs e)
         {
-
+           
             dgvMaintenance.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvMaintenance.MultiSelect = false;
             dgvMaintenance.ReadOnly = true;
             dgvMaintenance.AllowUserToAddRows = false;
             dgvMaintenance.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-
-            dtpTanggal.MinDate = DateTime.Today;
-            dtpTanggal.MaxDate = DateTime.Today;
-
-
             cbJenisPerbaikan.Items.Clear();
             cbJenisPerbaikan.Items.Add("Perbaikan Ringan");
             cbJenisPerbaikan.Items.Add("Perbaikan Berat");
 
-
             cbJenisPerbaikan.DropDownStyle = ComboBoxStyle.DropDownList;
             cbAlat.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTeknisi.DropDownStyle = ComboBoxStyle.DropDownList;
-
 
             LoadAlat();
             LoadTeknisi();
             TampilData();
         }
 
-
         private void btnSimpan_Click(object sender, EventArgs e)
         {
+            if (cbAlat.SelectedIndex == -1 || cbTeknisi.SelectedIndex == -1 || cbJenisPerbaikan.SelectedIndex == -1)
+            {
+                MessageBox.Show("Alat, Teknisi, dan Jenis Perbaikan wajib dipilih!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
-
-                if (cbAlat.SelectedIndex == -1 || cbTeknisi.SelectedIndex == -1 || cbJenisPerbaikan.SelectedIndex == -1)
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    MessageBox.Show("Alat, Teknisi, dan Jenis Perbaikan wajib dipilih!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                    
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertMaintenance", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
+                        cmd.Parameters.AddWithValue("@id_alat", cbAlat.SelectedValue);
+                        cmd.Parameters.AddWithValue("@id_teknisi", cbTeknisi.SelectedValue);
+                        cmd.Parameters.AddWithValue("@tgl_service", dtpTanggal.Value.Date);
+                        cmd.Parameters.AddWithValue("@jenis_perbaikan", cbJenisPerbaikan.SelectedItem.ToString());
+                        cmd.Parameters.AddWithValue("@keterangan", txtKeterangan.Text);
 
-                string query = "INSERT INTO Maintenance (id_alat, id_teknisi, tgl_service, jenis_perbaikan, keterangan) VALUES (@idA, @idT, @tgl, @jenis, @ket)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@idA", cbAlat.SelectedValue);
-                cmd.Parameters.AddWithValue("@idT", cbTeknisi.SelectedValue);
-                cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value.Date);
-
-                cmd.Parameters.AddWithValue("@jenis", cbJenisPerbaikan.SelectedItem.ToString());
-                cmd.Parameters.AddWithValue("@ket", txtKeterangan.Text);
-
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Data maintenance berhasil ditambahkan");
-                    ClearForm();
-                    TampilData();
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Data maintenance berhasil ditambahkan");
+                        ClearForm();
+                        TampilData();
+                    }
                 }
             }
             catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(idMaintenanceTerpilih)) { MessageBox.Show("Pilih data dari tabel dulu!"); return; }
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateMaintenance", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@id_maintenance", idMaintenanceTerpilih);
+                        cmd.Parameters.AddWithValue("@id_alat", cbAlat.SelectedValue);
+                        cmd.Parameters.AddWithValue("@id_teknisi", cbTeknisi.SelectedValue);
+                        cmd.Parameters.AddWithValue("@tgl_service", dtpTanggal.Value.Date);
+                        cmd.Parameters.AddWithValue("@jenis_perbaikan", cbJenisPerbaikan.SelectedItem.ToString());
+                        cmd.Parameters.AddWithValue("@keterangan", txtKeterangan.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Data berhasil diperbarui");
+                        ClearForm();
+                        TampilData();
+                    }
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+        }
+
+        private void btnHapus_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(idMaintenanceTerpilih)) { MessageBox.Show("Pilih data dari tabel dulu!"); return; }
+
+            if (MessageBox.Show("Yakin ingin menghapus data?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                      
+                        using (SqlCommand cmd = new SqlCommand("sp_DeleteMaintenance", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@id_maintenance", idMaintenanceTerpilih);
+
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Data berhasil dihapus");
+                            ClearForm();
+                            TampilData();
+                        }
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+            }
+        }
+
+        private void txtCari_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    
+                    using (SqlCommand cmd = new SqlCommand("sp_SearchMaintenance", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Keyword", txtCari.Text);
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        dgvMaintenance.DataSource = dt;
+                    }
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("Gagal mencari data: " + ex.Message); }
         }
 
         private void dgvMaintenance_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -192,124 +235,13 @@ namespace SistemMaintenanceAlatPertanian
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvMaintenance.Rows[e.RowIndex];
-                idMaintenanceTerpilih = row.Cells["id_m"].Value.ToString();
-                cbAlat.Text = row.Cells["alat"].Value.ToString();
-                cbTeknisi.Text = row.Cells["teknisi"].Value.ToString();
-                dtpTanggal.Value = Convert.ToDateTime(row.Cells["tgl"].Value);
-
-
-                cbJenisPerbaikan.Text = row.Cells["jenis"].Value.ToString();
-                txtKeterangan.Text = row.Cells["ket"].Value.ToString();
+                idMaintenanceTerpilih = row.Cells["id_maintenance"].Value.ToString();
+                cbAlat.Text = row.Cells["nama_alat"].Value.ToString();
+                cbTeknisi.Text = row.Cells["nama_teknisi"].Value.ToString();
+                dtpTanggal.Value = Convert.ToDateTime(row.Cells["tgl_service"].Value);
+                cbJenisPerbaikan.Text = row.Cells["jenis_perbaikan"].Value.ToString();
+                txtKeterangan.Text = row.Cells["keterangan"].Value.ToString();
             }
-        }
-
-
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (idMaintenanceTerpilih == "") { MessageBox.Show("Pilih data dari tabel dulu!"); return; }
-
-
-                if (cbAlat.SelectedIndex == -1 || cbTeknisi.SelectedIndex == -1 || cbJenisPerbaikan.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Alat, Teknisi, dan Jenis Perbaikan wajib dipilih!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                string query = "UPDATE Maintenance SET id_alat=@idA, id_teknisi=@idT, tgl_service=@tgl, jenis_perbaikan=@jenis, keterangan=@ket WHERE id_maintenance=@id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@idA", cbAlat.SelectedValue);
-                cmd.Parameters.AddWithValue("@idT", cbTeknisi.SelectedValue);
-                cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value.Date);
-
-
-                cmd.Parameters.AddWithValue("@jenis", cbJenisPerbaikan.SelectedItem.ToString());
-                cmd.Parameters.AddWithValue("@ket", txtKeterangan.Text);
-                cmd.Parameters.AddWithValue("@id", idMaintenanceTerpilih);
-
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Data berhasil diperbarui");
-                    ClearForm();
-                    TampilData();
-                }
-            }
-            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
-        }
-
-
-        private void btnHapus_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (idMaintenanceTerpilih == "") { MessageBox.Show("Pilih data dari tabel dulu!"); return; }
-
-                DialogResult result = MessageBox.Show("Yakin ingin menghapus data?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                    string query = "DELETE FROM Maintenance WHERE id_maintenance=@id";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@id", idMaintenanceTerpilih);
-
-                    if (cmd.ExecuteNonQuery() > 0)
-                    {
-                        MessageBox.Show("Data berhasil dihapus");
-                        ClearForm();
-                        TampilData();
-                    }
-                }
-            }
-            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
-        }
-
-        private void txtCari_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                dgvMaintenance.Rows.Clear(); 
-
-                
-                string query = @"SELECT m.id_maintenance, a.nama_alat, t.nama_teknisi, m.tgl_service, m.jenis_perbaikan, m.keterangan 
-                         FROM Maintenance m 
-                         JOIN Alat a ON m.id_alat = a.id_alat 
-                         JOIN Teknisi t ON m.id_teknisi = t.id_teknisi
-                         WHERE a.nama_alat LIKE @Cari OR t.nama_teknisi LIKE @Cari";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                cmd.Parameters.AddWithValue("@Cari", "%" + txtCari.Text + "%");
-
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                   
-                    dgvMaintenance.Rows.Add(
-                        reader["id_maintenance"].ToString(),
-                        reader["nama_alat"].ToString(),
-                        reader["nama_teknisi"].ToString(),
-                        Convert.ToDateTime(reader["tgl_service"]).ToShortDateString(),
-                        reader["jenis_perbaikan"].ToString(),
-                        reader["keterangan"].ToString()
-                    );
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal mencari data: " + ex.Message);
-            }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
     }
 }

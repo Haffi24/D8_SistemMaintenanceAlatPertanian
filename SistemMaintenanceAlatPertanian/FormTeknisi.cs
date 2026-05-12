@@ -13,18 +13,16 @@ namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormTeknisi : Form
     {
-
-        private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
-
         private string idTeknisiTerpilih = "";
 
         public FormTeknisi()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
         }
 
+       
+        private void label1_Click(object sender, EventArgs e) { }
 
         private void ClearForm()
         {
@@ -37,38 +35,32 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                dgvTeknisi.Rows.Clear();
-                dgvTeknisi.Columns.Clear();
-
-
-                dgvTeknisi.Columns.Add("id_teknisi", "ID Teknisi");
-                dgvTeknisi.Columns.Add("nama_teknisi", "Nama Teknisi");
-
-                string query = "SELECT * FROM Teknisi";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    dgvTeknisi.Rows.Add(
-                        reader["id_teknisi"].ToString(),
-                        reader["nama_teknisi"].ToString()
-                    );
+                    
+                    string query = "SELECT * FROM vwTeknisiPublic";
+                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    dgvTeknisi.DataSource = dt;
+
+                    
+                    if (dgvTeknisi.Columns.Count > 0)
+                    {
+                        dgvTeknisi.Columns["id_teknisi"].HeaderText = "ID Teknisi";
+                        dgvTeknisi.Columns["nama_teknisi"].HeaderText = "Nama Teknisi";
+                    }
                 }
-                reader.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal menampilkan data: " + ex.Message);
             }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
         private void FormTeknisi_Load(object sender, EventArgs e)
         {
-
             dgvTeknisi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTeknisi.MultiSelect = false;
             dgvTeknisi.ReadOnly = true;
@@ -78,56 +70,44 @@ namespace SistemMaintenanceAlatPertanian
             TampilData();
         }
 
-        
         private void txtNamaTeknisi_KeyPress(object sender, KeyPressEventArgs e)
         {
             
             if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
             {
-                e.Handled = true; 
+                e.Handled = true;
             }
         }
-        
 
         private void btnSimpan_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtNamaTeknisi.Text))
+            {
+                MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
-                if (txtNamaTeknisi.Text == "")
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNamaTeknisi.Focus();
-                    return;
-                }
+                    
+                    using (SqlCommand cmd = new SqlCommand("sp_InsertTeknisi", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@nama_teknisi", txtNamaTeknisi.Text);
 
-                
-                if (txtNamaTeknisi.Text.Any(char.IsDigit))
-                {
-                    MessageBox.Show("Nama Teknisi hanya boleh berisi huruf, tidak boleh mengandung angka!", "Validasi Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNamaTeknisi.Focus();
-                    return;
-                }
-                
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
 
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                string query = "INSERT INTO Teknisi (nama_teknisi) VALUES (@Nama)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Nama", txtNamaTeknisi.Text);
-
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
-                {
-                    MessageBox.Show("Data teknisi berhasil ditambahkan");
-                    ClearForm();
-                    TampilData();
+                        MessageBox.Show("Data teknisi berhasil ditambahkan");
+                        ClearForm();
+                        TampilData();
+                    }
                 }
             }
             catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
-
 
         private void dgvTeknisi_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -139,115 +119,93 @@ namespace SistemMaintenanceAlatPertanian
             }
         }
 
-
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            try
+            if (string.IsNullOrEmpty(idTeknisiTerpilih))
             {
-                if (idTeknisiTerpilih == "") { MessageBox.Show("Pilih data teknisi dari tabel dulu!"); return; }
-
-                if (txtNamaTeknisi.Text == "")
-                {
-                    MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNamaTeknisi.Focus();
-                    return;
-                }
-
-                
-                if (txtNamaTeknisi.Text.Any(char.IsDigit))
-                {
-                    MessageBox.Show("Nama Teknisi hanya boleh berisi huruf, tidak boleh mengandung angka!", "Validasi Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtNamaTeknisi.Focus();
-                    return;
-                }
-                
-
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                string query = "UPDATE Teknisi SET nama_teknisi = @Nama WHERE id_teknisi = @ID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Nama", txtNamaTeknisi.Text);
-                cmd.Parameters.AddWithValue("@ID", idTeknisiTerpilih);
-
-                int result = cmd.ExecuteNonQuery();
-
-                if (result > 0)
-                {
-                    MessageBox.Show("Data berhasil diupdate");
-                    ClearForm();
-                    TampilData();
-                }
+                MessageBox.Show("Pilih data teknisi dari tabel dulu!");
+                return;
             }
-            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
-        }
 
-
-        private void btnHapus_Click(object sender, EventArgs e)
-        {
             try
             {
-                if (idTeknisiTerpilih == "") { MessageBox.Show("Pilih data teknisi dari tabel dulu!"); return; }
-
-                DialogResult confirm = MessageBox.Show("Yakin ingin menghapus data?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                if (confirm == DialogResult.Yes)
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                    string query = "DELETE FROM Teknisi WHERE id_teknisi = @ID";
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@ID", idTeknisiTerpilih);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
+                    
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateTeknisi", conn))
                     {
-                        MessageBox.Show("Data berhasil dihapus");
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id_teknisi", idTeknisiTerpilih);
+                        cmd.Parameters.AddWithValue("@nama_teknisi", txtNamaTeknisi.Text);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Data berhasil diupdate");
                         ClearForm();
                         TampilData();
                     }
                 }
             }
             catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
+        }
+
+        private void btnHapus_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(idTeknisiTerpilih))
+            {
+                MessageBox.Show("Pilih data teknisi dari tabel dulu!");
+                return;
+            }
+
+            if (MessageBox.Show("Yakin ingin menghapus data?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        
+                        using (SqlCommand cmd = new SqlCommand("sp_DeleteTeknisi", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@id_teknisi", idTeknisiTerpilih);
+
+                            conn.Open();
+                            cmd.ExecuteNonQuery();
+
+                            MessageBox.Show("Data berhasil dihapus");
+                            ClearForm();
+                            TampilData();
+                        }
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+            }
         }
 
         private void txtCari_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-                dgvTeknisi.Rows.Clear(); 
-               
-                string query = "SELECT * FROM Teknisi WHERE nama_teknisi LIKE @Cari OR CAST(id_teknisi AS VARCHAR) LIKE @Cari";
-                
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Cari", "%" + txtCari.Text + "%");
-
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    dgvTeknisi.Rows.Add(
-                        reader["id_teknisi"].ToString(),
-                        reader["nama_teknisi"].ToString()
-                    );
+                    
+                    using (SqlCommand cmd = new SqlCommand("sp_SearchTeknisi", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Keyword", txtCari.Text);
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        dgvTeknisi.DataSource = dt;
+                    }
                 }
-                reader.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal mencari data teknisi: " + ex.Message);
             }
-            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
