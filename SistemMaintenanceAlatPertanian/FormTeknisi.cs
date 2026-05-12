@@ -213,6 +213,37 @@ namespace SistemMaintenanceAlatPertanian
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
+        private void txtCari_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
+
+                dgvTeknisi.Rows.Clear();
+
+                string query = "SELECT * FROM Teknisi WHERE nama_teknisi LIKE @Cari";
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@Cari", "%" + txtCari.Text + "%");
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    dgvTeknisi.Rows.Add(
+                        reader["id_teknisi"].ToString(),
+                        reader["nama_teknisi"].ToString()
+                    );
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal mencari data teknisi: " + ex.Message);
+            }
+            finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
+        }
+
         private void label1_Click(object sender, EventArgs e)
         {
 
