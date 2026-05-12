@@ -76,3 +76,19 @@ BEGIN
     WHERE nama_alat LIKE '%' + @Keyword + '%' OR kondisi_fisik LIKE '%' + @Keyword + '%';
 END;
 GO
+
+
+
+--sp tabel teknisi
+CREATE PROCEDURE sp_InsertTeknisi
+    @nama_teknisi VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    INSERT INTO Teknisi (nama_teknisi) 
+    VALUES (@nama_teknisi);
+END;
+GO
+
+
