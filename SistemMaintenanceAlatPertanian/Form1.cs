@@ -30,16 +30,16 @@ namespace SistemMaintenanceAlatPertanian
 
         private void btnMaintenance_Click(object sender, EventArgs e)
         {
-            // Nama variabel di sini adalah 'frmMaintenance'
+            
             FormMaintenance frmMaintenance = new FormMaintenance();
 
-            // Maka di sini juga HARUS memanggil 'frmMaintenance', bukan 'frm'
+           
             frmMaintenance.ShowDialog();
         }
 
         private void btnTeknisi_Click(object sender, EventArgs e)
         {
-            // Pastikan nama class form kamu adalah FormTeknisi
+
             FormTeknisi frmTeknisi = new FormTeknisi();
             frmTeknisi.ShowDialog();
         }

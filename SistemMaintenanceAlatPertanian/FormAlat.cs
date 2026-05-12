@@ -14,12 +14,12 @@ namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormAlat : Form
     {
-        // Variabel Koneksi (Mengikuti format Modul 5 halaman 4)
+        // Variabel Koneksi 
         private readonly SqlConnection conn;
-        // Menggunakan Integrated Security=True sesuai panduan Modul Praktikum
+        
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
 
-        private string idAlatTerpilih = ""; // Tambahan untuk menyimpan ID karena alat tidak punya NIM
+        private string idAlatTerpilih = ""; 
 
         // Constructor 
         public FormAlat()
@@ -53,7 +53,7 @@ namespace SistemMaintenanceAlatPertanian
                 dgvAlat.Rows.Clear();
                 dgvAlat.Columns.Clear();
 
-                // Menambahkan kolom secara manual seperti di modul
+                // Menambahkan kolom secara manual 
                 dgvAlat.Columns.Add("id_alat", "ID Alat");
                 dgvAlat.Columns.Add("nama_alat", "Nama Alat");
                 dgvAlat.Columns.Add("kondisi_fisik", "Kondisi Fisik");
@@ -81,7 +81,7 @@ namespace SistemMaintenanceAlatPertanian
         // Event Form_Load
         private void FormAlat_Load(object sender, EventArgs e)
         {
-            // Pengaturan DataGridView sesuai modul
+            // Pengaturan DataGridView 
             dgvAlat.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAlat.MultiSelect = false;
             dgvAlat.ReadOnly = true;
@@ -126,7 +126,7 @@ namespace SistemMaintenanceAlatPertanian
                 {
                     MessageBox.Show("Data alat berhasil ditambahkan");
                     ClearForm();
-                    TampilData(); // Di modul pakai btnLoad.PerformClick(), kita panggil fungsi langsung
+                    TampilData();
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace SistemMaintenanceAlatPertanian
             }
         }
 
-        // Event Tombol Update (Mengikuti Modul 5 halaman 7)
+
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             try
@@ -186,7 +186,6 @@ namespace SistemMaintenanceAlatPertanian
             }
         }
 
-        // Event Tombol Delete (Mengikuti Modul 5 halaman 8)
         private void btnHapus_Click(object sender, EventArgs e)
         {
             try

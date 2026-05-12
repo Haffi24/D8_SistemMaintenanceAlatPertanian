@@ -133,6 +133,11 @@ namespace SistemMaintenanceAlatPertanian
             dgvMaintenance.AllowUserToAddRows = false;
             dgvMaintenance.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+
+            dtpTanggal.MinDate = DateTime.Today;
+            dtpTanggal.MaxDate = DateTime.Today;
+
+
             LoadAlat();
             LoadTeknisi();
             TampilData();
