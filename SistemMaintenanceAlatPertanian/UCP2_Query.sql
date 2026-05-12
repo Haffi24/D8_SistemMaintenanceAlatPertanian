@@ -130,3 +130,22 @@ BEGIN
     WHERE nama_teknisi LIKE '%' + @Keyword + '%';
 END;
 GO
+
+
+
+--sp insert maintenance
+CREATE PROCEDURE sp_InsertMaintenance
+    @id_alat INT,
+    @id_teknisi INT,
+    @tgl_service DATE,
+    @jenis_perbaikan VARCHAR(255),
+    @keterangan TEXT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Maintenance (id_alat, id_teknisi, tgl_service, jenis_perbaikan, keterangan)
+    VALUES (@id_alat, @id_teknisi, @tgl_service, @jenis_perbaikan, @keterangan);
+END;
+GO
+
+--
