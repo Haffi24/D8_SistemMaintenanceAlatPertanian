@@ -14,6 +14,9 @@ namespace SistemMaintenanceAlatPertanian
     public partial class FormAlat : Form
     {
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
+
+        private BindingSource bindingSource = new BindingSource();
+        private DataTable dtAlat = new DataTable();
         private string idAlatTerpilih = "";
 
         public FormAlat()
@@ -21,7 +24,6 @@ namespace SistemMaintenanceAlatPertanian
             InitializeComponent();
         }
 
-        
         private void label1_Click(object sender, EventArgs e) { }
         private void label2_Click(object sender, EventArgs e) { }
 
@@ -33,25 +35,32 @@ namespace SistemMaintenanceAlatPertanian
             txtNamaAlat.Focus();
         }
 
+        private void BindControls()
+        {
+            txtNamaAlat.DataBindings.Clear();
+            cbKondisi.DataBindings.Clear();
+
+            txtNamaAlat.DataBindings.Add("Text", bindingSource, "nama_alat");
+            cbKondisi.DataBindings.Add("Text", bindingSource, "kondisi_fisik");
+        }
+
         private void TampilData()
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     string query = "SELECT * FROM vwAlatPublic";
-                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dgvAlat.DataSource = dt;
-
-                    
-                    if (dgvAlat.Columns.Count > 0)
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
                     {
-                        dgvAlat.Columns["id_alat"].HeaderText = "ID Alat";
-                        dgvAlat.Columns["nama_alat"].HeaderText = "Nama Alat";
-                        dgvAlat.Columns["kondisi_fisik"].HeaderText = "Kondisi Fisik";
+                        dtAlat = new DataTable();
+                        da.Fill(dtAlat);
+
+                        bindingSource.DataSource = dtAlat;
+
+                        dgvAlat.DataSource = bindingSource;
+
+                        BindControls();
                     }
                 }
             }
@@ -63,6 +72,8 @@ namespace SistemMaintenanceAlatPertanian
 
         private void FormAlat_Load(object sender, EventArgs e)
         {
+            bindingNavigator1.BindingSource = bindingSource;
+
             dgvAlat.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAlat.MultiSelect = false;
             dgvAlat.ReadOnly = true;
@@ -89,7 +100,6 @@ namespace SistemMaintenanceAlatPertanian
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     using (SqlCommand cmd = new SqlCommand("sp_InsertAlat", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -99,7 +109,6 @@ namespace SistemMaintenanceAlatPertanian
                         conn.Open();
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("Data alat berhasil ditambahkan");
-                        ClearForm();
                         TampilData();
                     }
                 }
@@ -112,7 +121,8 @@ namespace SistemMaintenanceAlatPertanian
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(idAlatTerpilih))
+            DataRowView row = (DataRowView)bindingSource.Current;
+            if (row == null)
             {
                 MessageBox.Show("Pilih data dari tabel terlebih dahulu!");
                 return;
@@ -122,18 +132,16 @@ namespace SistemMaintenanceAlatPertanian
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     using (SqlCommand cmd = new SqlCommand("sp_UpdateAlat", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id_alat", idAlatTerpilih);
+                        cmd.Parameters.AddWithValue("@id_alat", row["id_alat"]);
                         cmd.Parameters.AddWithValue("@nama_alat", txtNamaAlat.Text);
-                        cmd.Parameters.AddWithValue("@kondisi_fisik", cbKondisi.SelectedItem.ToString());
+                        cmd.Parameters.AddWithValue("@kondisi_fisik", cbKondisi.Text);
 
                         conn.Open();
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("Data berhasil diperbarui");
-                        ClearForm();
                         TampilData();
                     }
                 }
@@ -146,7 +154,8 @@ namespace SistemMaintenanceAlatPertanian
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(idAlatTerpilih))
+            DataRowView row = (DataRowView)bindingSource.Current;
+            if (row == null)
             {
                 MessageBox.Show("Pilih data dari tabel terlebih dahulu!");
                 return;
@@ -158,16 +167,14 @@ namespace SistemMaintenanceAlatPertanian
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        
                         using (SqlCommand cmd = new SqlCommand("sp_DeleteAlat", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@id_alat", idAlatTerpilih);
+                            cmd.Parameters.AddWithValue("@id_alat", row["id_alat"]);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Data berhasil dihapus");
-                            ClearForm();
                             TampilData();
                         }
                     }
@@ -185,7 +192,6 @@ namespace SistemMaintenanceAlatPertanian
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    
                     using (SqlCommand cmd = new SqlCommand("sp_SearchAlat", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -194,7 +200,8 @@ namespace SistemMaintenanceAlatPertanian
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
                         DataTable dt = new DataTable();
                         da.Fill(dt);
-                        dgvAlat.DataSource = dt;
+
+                        bindingSource.DataSource = dt;
                     }
                 }
             }
@@ -208,10 +215,11 @@ namespace SistemMaintenanceAlatPertanian
         {
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow row = dgvAlat.Rows[e.RowIndex];
-                idAlatTerpilih = row.Cells["id_alat"].Value.ToString();
-                txtNamaAlat.Text = row.Cells["nama_alat"].Value.ToString();
-                cbKondisi.Text = row.Cells["kondisi_fisik"].Value.ToString();
+                DataRowView row = (DataRowView)bindingSource.Current;
+                if (row != null)
+                {
+                    idAlatTerpilih = row["id_alat"].ToString();
+                }
             }
         }
     }
