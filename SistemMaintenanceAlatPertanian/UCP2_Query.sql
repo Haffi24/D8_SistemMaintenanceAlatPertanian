@@ -180,3 +180,17 @@ BEGIN
     WHERE id_maintenance = @id_maintenance;
 END;
 GO
+
+--sp search maintenance
+CREATE PROCEDURE sp_SearchMaintenance
+    @Keyword VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM vwDetailMaintenance 
+    WHERE jenis_perbaikan LIKE '%' + @Keyword + '%' 
+       OR keterangan LIKE '%' + @Keyword + '%'
+       OR nama_alat LIKE '%' + @Keyword + '%'
+       OR nama_teknisi LIKE '%' + @Keyword + '%';
+END;
+GO
