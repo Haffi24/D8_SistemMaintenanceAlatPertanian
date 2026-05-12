@@ -168,3 +168,15 @@ BEGIN
     WHERE id_maintenance = @id_maintenance;
 END;
 GO
+
+--sp delete maintenance
+
+CREATE PROCEDURE sp_DeleteMaintenance
+    @id_maintenance INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM Maintenance 
+    WHERE id_maintenance = @id_maintenance;
+END;
+GO
