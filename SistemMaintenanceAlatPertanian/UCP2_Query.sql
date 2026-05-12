@@ -62,3 +62,17 @@ BEGIN
     DELETE FROM Alat WHERE id_alat = @id_alat;
 END;
 GO
+
+
+
+--sp search
+CREATE PROCEDURE sp_SearchAlat
+    @Keyword VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Menggunakan View untuk search
+    SELECT * FROM vwAlatPublic
+    WHERE nama_alat LIKE '%' + @Keyword + '%' OR kondisi_fisik LIKE '%' + @Keyword + '%';
+END;
+GO
