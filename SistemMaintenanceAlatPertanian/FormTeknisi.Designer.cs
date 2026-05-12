@@ -57,6 +57,7 @@
             this.txtNamaTeknisi.Size = new System.Drawing.Size(605, 22);
             this.txtNamaTeknisi.TabIndex = 1;
             this.txtNamaTeknisi.Click += new System.EventHandler(this.FormTeknisi_Load);
+            this.txtNamaTeknisi.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNamaTeknisi_KeyPress);
             // 
             // btnUpdate
             // 

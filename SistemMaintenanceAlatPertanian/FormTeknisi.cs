@@ -13,11 +13,11 @@ namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormTeknisi : Form
     {
-      
+
         private readonly SqlConnection conn;
         private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
 
-        private string idTeknisiTerpilih = ""; 
+        private string idTeknisiTerpilih = "";
 
         public FormTeknisi()
         {
@@ -25,7 +25,7 @@ namespace SistemMaintenanceAlatPertanian
             conn = new SqlConnection(connectionString);
         }
 
-    
+
         private void ClearForm()
         {
             txtNamaTeknisi.Clear();
@@ -42,7 +42,7 @@ namespace SistemMaintenanceAlatPertanian
                 dgvTeknisi.Rows.Clear();
                 dgvTeknisi.Columns.Clear();
 
-              
+
                 dgvTeknisi.Columns.Add("id_teknisi", "ID Teknisi");
                 dgvTeknisi.Columns.Add("nama_teknisi", "Nama Teknisi");
 
@@ -68,7 +68,7 @@ namespace SistemMaintenanceAlatPertanian
 
         private void FormTeknisi_Load(object sender, EventArgs e)
         {
-           
+
             dgvTeknisi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTeknisi.MultiSelect = false;
             dgvTeknisi.ReadOnly = true;
@@ -78,16 +78,36 @@ namespace SistemMaintenanceAlatPertanian
             TampilData();
         }
 
+        
+        private void txtNamaTeknisi_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            {
+                e.Handled = true; 
+            }
+        }
+        
+
         private void btnSimpan_Click(object sender, EventArgs e)
         {
             try
             {
                 if (txtNamaTeknisi.Text == "")
                 {
-                    MessageBox.Show("Nama Teknisi harus diisi");
+                    MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtNamaTeknisi.Focus();
                     return;
                 }
+
+                
+                if (txtNamaTeknisi.Text.Any(char.IsDigit))
+                {
+                    MessageBox.Show("Nama Teknisi hanya boleh berisi huruf, tidak boleh mengandung angka!", "Validasi Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNamaTeknisi.Focus();
+                    return;
+                }
+                
 
                 if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
 
@@ -108,7 +128,7 @@ namespace SistemMaintenanceAlatPertanian
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
-       
+
         private void dgvTeknisi_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -119,12 +139,28 @@ namespace SistemMaintenanceAlatPertanian
             }
         }
 
-       
+
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             try
             {
                 if (idTeknisiTerpilih == "") { MessageBox.Show("Pilih data teknisi dari tabel dulu!"); return; }
+
+                if (txtNamaTeknisi.Text == "")
+                {
+                    MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNamaTeknisi.Focus();
+                    return;
+                }
+
+                
+                if (txtNamaTeknisi.Text.Any(char.IsDigit))
+                {
+                    MessageBox.Show("Nama Teknisi hanya boleh berisi huruf, tidak boleh mengandung angka!", "Validasi Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtNamaTeknisi.Focus();
+                    return;
+                }
+                
 
                 if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
 
@@ -146,7 +182,7 @@ namespace SistemMaintenanceAlatPertanian
             finally { if (conn.State == System.Data.ConnectionState.Open) conn.Close(); }
         }
 
-        
+
         private void btnHapus_Click(object sender, EventArgs e)
         {
             try
