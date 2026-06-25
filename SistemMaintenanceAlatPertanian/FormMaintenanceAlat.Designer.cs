@@ -157,8 +157,8 @@
             this.dtpTanggal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpTanggal.Location = new System.Drawing.Point(49, 249);
             this.dtpTanggal.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpTanggal.MaxDate = new System.DateTime(2026, 6, 25, 0, 0, 0, 0);
-            this.dtpTanggal.MinDate = new System.DateTime(2026, 6, 24, 23, 59, 59, 0);
+            this.dtpTanggal.MaxDate = new System.DateTime(2095, 7, 21, 0, 0, 0, 0);
+            this.dtpTanggal.MinDate = new System.DateTime(1990, 1, 29, 0, 0, 0, 0);
             this.dtpTanggal.Name = "dtpTanggal";
             this.dtpTanggal.Size = new System.Drawing.Size(272, 26);
             this.dtpTanggal.TabIndex = 7;
@@ -376,7 +376,6 @@
             // 
             this.bindingNavigatorPositionItem.AccessibleName = "Position";
             this.bindingNavigatorPositionItem.AutoSize = false;
-            this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
             this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(65, 27);
             this.bindingNavigatorPositionItem.Text = "0";
