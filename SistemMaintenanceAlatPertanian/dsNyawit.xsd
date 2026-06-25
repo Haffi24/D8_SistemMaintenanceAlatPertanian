@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsNyawit" targetNamespace="http://tempuri.org/dsNyawit.xsd" xmlns:mstns="http://tempuri.org/dsNyawit.xsd" xmlns="http://tempuri.org/dsNyawit.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsNyawit" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="dsNyawit" msprop:Generator_DataSetName="dsNyawit">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtLaporanMaintenance" msprop:Generator_RowEvHandlerName="dtLaporanMaintenanceRowChangeEventHandler" msprop:Generator_RowDeletedName="dtLaporanMaintenanceRowDeleted" msprop:Generator_RowDeletingName="dtLaporanMaintenanceRowDeleting" msprop:Generator_RowEvArgName="dtLaporanMaintenanceRowChangeEvent" msprop:Generator_TablePropName="dtLaporanMaintenance" msprop:Generator_RowChangedName="dtLaporanMaintenanceRowChanged" msprop:Generator_RowChangingName="dtLaporanMaintenanceRowChanging" msprop:Generator_TableClassName="dtLaporanMaintenanceDataTable" msprop:Generator_RowClassName="dtLaporanMaintenanceRow" msprop:Generator_TableVarName="tabledtLaporanMaintenance" msprop:Generator_UserTableName="dtLaporanMaintenance">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id_maintenance" msprop:Generator_ColumnPropNameInRow="id_maintenance" msprop:Generator_ColumnPropNameInTable="id_maintenanceColumn" msprop:Generator_ColumnVarNameInTable="columnid_maintenance" msprop:Generator_UserColumnName="id_maintenance" type="xs:string" minOccurs="0" />
+              <xs:element name="nama_alat" msprop:Generator_ColumnPropNameInRow="nama_alat" msprop:Generator_ColumnPropNameInTable="nama_alatColumn" msprop:Generator_ColumnVarNameInTable="columnnama_alat" msprop:Generator_UserColumnName="nama_alat" type="xs:string" minOccurs="0" />
+              <xs:element name="nama_teknisi" msprop:Generator_ColumnPropNameInRow="nama_teknisi" msprop:Generator_ColumnPropNameInTable="nama_teknisiColumn" msprop:Generator_ColumnVarNameInTable="columnnama_teknisi" msprop:Generator_UserColumnName="nama_teknisi" type="xs:string" minOccurs="0" />
+              <xs:element name="tgl_service" msprop:Generator_ColumnPropNameInRow="tgl_service" msprop:Generator_ColumnPropNameInTable="tgl_serviceColumn" msprop:Generator_ColumnVarNameInTable="columntgl_service" msprop:Generator_UserColumnName="tgl_service" type="xs:string" minOccurs="0" />
+              <xs:element name="jenis_perbaikan" msprop:Generator_ColumnPropNameInRow="jenis_perbaikan" msprop:Generator_ColumnPropNameInTable="jenis_perbaikanColumn" msprop:Generator_ColumnVarNameInTable="columnjenis_perbaikan" msprop:Generator_UserColumnName="jenis_perbaikan" type="xs:string" minOccurs="0" />
+              <xs:element name="keterangan" msprop:Generator_ColumnPropNameInRow="keterangan" msprop:Generator_ColumnPropNameInTable="keteranganColumn" msprop:Generator_ColumnVarNameInTable="columnketerangan" msprop:Generator_UserColumnName="keterangan" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

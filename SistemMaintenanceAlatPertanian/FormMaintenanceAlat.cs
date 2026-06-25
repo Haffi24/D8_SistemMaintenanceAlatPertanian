@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SistemMaintenanceAlatPertanian
@@ -16,6 +17,31 @@ namespace SistemMaintenanceAlatPertanian
         public FormMaintenance()
         {
             InitializeComponent();
+        }
+
+        private void CatatLogError(string pesanError, string lokasiError)
+        {
+            try
+            {
+                string folderPath = Application.StartupPath + "\\Logs";
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string filePath = folderPath + "\\ErrorLog_" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+
+                string formatLog = $"[{DateTime.Now.ToString("HH:mm:ss")}] ERROR di {lokasiError} : {pesanError}";
+
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine(formatLog);
+                    sw.WriteLine(new string('-', 50));
+                }
+            }
+            catch
+            {
+            }
         }
 
         private void ClearForm()
@@ -61,7 +87,16 @@ namespace SistemMaintenanceAlatPertanian
                     cbAlat.SelectedIndex = -1;
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Gagal Load Alat: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "LoadAlat");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "LoadAlat");
+            }
         }
 
         private void LoadTeknisi()
@@ -81,7 +116,16 @@ namespace SistemMaintenanceAlatPertanian
                     cbTeknisi.SelectedIndex = -1;
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Gagal Load Teknisi: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "LoadTeknisi");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "LoadTeknisi");
+            }
         }
 
         private void TampilData()
@@ -113,7 +157,16 @@ namespace SistemMaintenanceAlatPertanian
                     BindControls();
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Gagal menampilkan data: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "TampilData");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "TampilData");
+            }
         }
 
         private void FormMaintenance_Load(object sender, EventArgs e)
@@ -133,6 +186,12 @@ namespace SistemMaintenanceAlatPertanian
             cbJenisPerbaikan.DropDownStyle = ComboBoxStyle.DropDownList;
             cbAlat.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTeknisi.DropDownStyle = ComboBoxStyle.DropDownList;
+
+           
+            dtpTanggal.MinDate = DateTime.Today;
+            dtpTanggal.MaxDate = DateTime.Today;
+            dtpTanggal.Value = DateTime.Today;
+           
 
             LoadAlat();
             LoadTeknisi();
@@ -168,7 +227,16 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "btnSimpan_Click");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "btnSimpan_Click");
+            }
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
@@ -197,7 +265,16 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "btnUpdate_Click");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "btnUpdate_Click");
+            }
         }
 
         private void btnHapus_Click(object sender, EventArgs e)
@@ -223,7 +300,16 @@ namespace SistemMaintenanceAlatPertanian
                         }
                     }
                 }
-                catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+                catch (SqlException sqlEx)
+                {
+                    MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CatatLogError(sqlEx.Message, "btnHapus_Click");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CatatLogError(ex.Message, "btnHapus_Click");
+                }
             }
         }
 
@@ -245,7 +331,16 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Gagal mencari data: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "txtCari_TextChanged");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "txtCari_TextChanged");
+            }
         }
 
         private void dgvMaintenance_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -258,6 +353,19 @@ namespace SistemMaintenanceAlatPertanian
                     idMaintenanceTerpilih = row["id_maintenance"].ToString();
                 }
             }
+        }
+
+        private void btnCetakLaporan_Click(object sender, EventArgs e)
+        {
+            
+                FormLaporan frmLaporan = new FormLaporan();
+                frmLaporan.ShowDialog();
+            
+        }
+
+        private void dtpTanggal_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

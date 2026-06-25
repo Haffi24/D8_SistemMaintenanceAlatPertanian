@@ -43,7 +43,16 @@ namespace SistemMaintenanceAlatPertanian
             FormTeknisi frmTeknisi = new FormTeknisi();
             frmTeknisi.ShowDialog();
         }
-       
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            FormDashboard frmDash = new FormDashboard();
+            frmDash.ShowDialog();
+        }
     }
 }

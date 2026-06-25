@@ -4,10 +4,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ExcelDataReader;
 
 namespace SistemMaintenanceAlatPertanian
 {
@@ -19,9 +21,36 @@ namespace SistemMaintenanceAlatPertanian
         private DataTable dtAlat = new DataTable();
         private string idAlatTerpilih = "";
 
+        // Variabel penampung data Excel sementara
+        private DataTable dtExcel = new DataTable();
+
         public FormAlat()
         {
             InitializeComponent();
+        }
+
+        private void CatatLogError(string pesanError, string lokasiError)
+        {
+            try
+            {
+                string folderPath = Application.StartupPath + "\\Logs";
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string filePath = folderPath + "\\ErrorLog_" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+                string formatLog = $"[{DateTime.Now.ToString("HH:mm:ss")}] ERROR di {lokasiError} : {pesanError}";
+
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine(formatLog);
+                    sw.WriteLine(new string('-', 50));
+                }
+            }
+            catch
+            {
+            }
         }
 
         private void label1_Click(object sender, EventArgs e) { }
@@ -64,9 +93,15 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "TampilData");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal menampilkan data: " + ex.Message);
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "TampilData");
             }
         }
 
@@ -113,9 +148,15 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "btnSimpan_Click");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "btnSimpan_Click");
             }
         }
 
@@ -146,9 +187,15 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "btnUpdate_Click");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "btnUpdate_Click");
             }
         }
 
@@ -179,9 +226,15 @@ namespace SistemMaintenanceAlatPertanian
                         }
                     }
                 }
+                catch (SqlException sqlEx)
+                {
+                    MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CatatLogError(sqlEx.Message, "btnHapus_Click");
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Terjadi kesalahan: " + ex.Message);
+                    MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CatatLogError(ex.Message, "btnHapus_Click");
                 }
             }
         }
@@ -205,9 +258,15 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "txtCari_TextChanged");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal mencari data: " + ex.Message);
+                MessageBox.Show("Gagal mencari data: " + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "txtCari_TextChanged");
             }
         }
 
@@ -240,9 +299,15 @@ namespace SistemMaintenanceAlatPertanian
                 }
                 TampilData();
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "btnTestInjection_Click");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "btnTestInjection_Click");
             }
         }
 
@@ -260,7 +325,6 @@ namespace SistemMaintenanceAlatPertanian
                         conn.Open();
 
                         string query = @"
-                    -- 1. Reset Tabel Maintenance
                     IF OBJECT_ID('dbo.Maintenance_Backup') IS NOT NULL
                     BEGIN
                         DELETE FROM dbo.Maintenance;
@@ -271,7 +335,6 @@ namespace SistemMaintenanceAlatPertanian
                         SET IDENTITY_INSERT dbo.Maintenance OFF;
                     END
 
-                    -- 2. Reset Tabel Alat
                     IF OBJECT_ID('dbo.Alat_Backup') IS NOT NULL
                     BEGIN
                         DELETE FROM dbo.Alat;
@@ -282,7 +345,6 @@ namespace SistemMaintenanceAlatPertanian
                         SET IDENTITY_INSERT dbo.Alat OFF;
                     END
 
-                    -- 3. Reset Tabel Teknisi
                     IF OBJECT_ID('dbo.Teknisi_Backup') IS NOT NULL
                     BEGIN
                         DELETE FROM dbo.Teknisi;
@@ -303,11 +365,96 @@ namespace SistemMaintenanceAlatPertanian
 
                     TampilData();
                 }
+                catch (SqlException sqlEx)
+                {
+                    MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CatatLogError(sqlEx.Message, "buttonreset_click");
+                }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Terjadi kesalahan saat proses reset: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CatatLogError(ex.Message, "buttonreset_click");
                 }
             }
+        }
+
+      
+        private void btnBrowseExcel_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "Excel Workbook|*.xlsx|Excel 97-2003 Workbook|*.xls" })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        using (var stream = File.Open(ofd.FileName, FileMode.Open, FileAccess.Read))
+                        {
+                            using (var reader = ExcelReaderFactory.CreateReader(stream))
+                            {
+                                var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                                {
+                                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration() { UseHeaderRow = true }
+                                });
+
+                                dtExcel = result.Tables[0];
+                                dgvAlat.DataSource = dtExcel; // Menampilkan sementara ke DataGridView
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CatatLogError(ex.Message, "btnBrowseExcel_Click");
+                    }
+                }
+            }
+        }
+
+        private void btnImportExcel_Click(object sender, EventArgs e)
+        {
+            if (dtExcel != null && dtExcel.Rows.Count > 0)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        foreach (DataRow row in dtExcel.Rows)
+                        {
+                            using (SqlCommand cmd = new SqlCommand("sp_InsertAlat", conn))
+                            {
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@nama_alat", row["nama_alat"].ToString());
+                                cmd.Parameters.AddWithValue("@kondisi_fisik", row["kondisi_fisik"].ToString());
+
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        MessageBox.Show("Data Excel berhasil diimport ke Database!");
+                        dtExcel.Clear();
+                        TampilData(); 
+                    }
+                }
+                catch (SqlException sqlEx)
+                {
+                    MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CatatLogError(sqlEx.Message, "btnImportExcel_Click");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CatatLogError(ex.Message, "btnImportExcel_Click");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Pilih file Excel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

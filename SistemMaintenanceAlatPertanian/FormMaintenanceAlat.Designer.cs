@@ -32,48 +32,50 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMaintenance));
             this.label1 = new System.Windows.Forms.Label();
             this.cbAlat = new System.Windows.Forms.ComboBox();
+            this.maintenanceBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dBMaintenanceAlatDataSet1 = new SistemMaintenanceAlatPertanian.DBMaintenanceAlatDataSet1();
             this.cbTeknisi = new System.Windows.Forms.ComboBox();
+            this.maintenanceBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.dtpTanggal = new System.Windows.Forms.DateTimePicker();
+            this.maintenanceBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.txtKeterangan = new System.Windows.Forms.TextBox();
+            this.maintenanceBindingSource4 = new System.Windows.Forms.BindingSource(this.components);
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnHapus = new System.Windows.Forms.Button();
             this.btnSimpan = new System.Windows.Forms.Button();
             this.dgvMaintenance = new System.Windows.Forms.DataGridView();
             this.cbJenisPerbaikan = new System.Windows.Forms.ComboBox();
+            this.maintenanceBindingSource3 = new System.Windows.Forms.BindingSource(this.components);
             this.label6 = new System.Windows.Forms.Label();
             this.txtCari = new System.Windows.Forms.TextBox();
             this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
+            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
+            this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
+            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMovePreviousItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.bindingNavigatorPositionItem = new System.Windows.Forms.ToolStripTextBox();
-            this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
             this.bindingNavigatorSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
-            this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
-            this.dBMaintenanceAlatDataSet1 = new SistemMaintenanceAlatPertanian.DBMaintenanceAlatDataSet1();
-            this.maintenanceBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.maintenanceTableAdapter = new SistemMaintenanceAlatPertanian.DBMaintenanceAlatDataSet1TableAdapters.MaintenanceTableAdapter();
-            this.maintenanceBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.maintenanceBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
-            this.maintenanceBindingSource3 = new System.Windows.Forms.BindingSource(this.components);
-            this.maintenanceBindingSource4 = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMaintenance)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
-            this.bindingNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dBMaintenanceAlatDataSet1)).BeginInit();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dBMaintenanceAlatDataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvMaintenance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
+            this.bindingNavigator1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -81,9 +83,10 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label1.Location = new System.Drawing.Point(34, 46);
+            this.label1.Location = new System.Drawing.Point(45, 115);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 16);
+            this.label1.Size = new System.Drawing.Size(98, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "PILIH ALAT";
             // 
@@ -92,29 +95,47 @@
             this.cbAlat.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.maintenanceBindingSource, "id_alat", true));
             this.cbAlat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbAlat.FormattingEnabled = true;
-            this.cbAlat.Location = new System.Drawing.Point(204, 38);
+            this.cbAlat.Location = new System.Drawing.Point(49, 139);
+            this.cbAlat.Margin = new System.Windows.Forms.Padding(4);
             this.cbAlat.Name = "cbAlat";
-            this.cbAlat.Size = new System.Drawing.Size(282, 24);
+            this.cbAlat.Size = new System.Drawing.Size(272, 28);
             this.cbAlat.TabIndex = 3;
+            // 
+            // maintenanceBindingSource
+            // 
+            this.maintenanceBindingSource.DataMember = "Maintenance";
+            this.maintenanceBindingSource.DataSource = this.dBMaintenanceAlatDataSet1;
+            // 
+            // dBMaintenanceAlatDataSet1
+            // 
+            this.dBMaintenanceAlatDataSet1.DataSetName = "DBMaintenanceAlatDataSet1";
+            this.dBMaintenanceAlatDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // cbTeknisi
             // 
             this.cbTeknisi.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.maintenanceBindingSource1, "id_teknisi", true));
             this.cbTeknisi.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbTeknisi.FormattingEnabled = true;
-            this.cbTeknisi.Location = new System.Drawing.Point(204, 72);
+            this.cbTeknisi.Location = new System.Drawing.Point(49, 193);
+            this.cbTeknisi.Margin = new System.Windows.Forms.Padding(4);
             this.cbTeknisi.Name = "cbTeknisi";
-            this.cbTeknisi.Size = new System.Drawing.Size(282, 24);
+            this.cbTeknisi.Size = new System.Drawing.Size(272, 28);
             this.cbTeknisi.TabIndex = 4;
+            // 
+            // maintenanceBindingSource1
+            // 
+            this.maintenanceBindingSource1.DataMember = "Maintenance";
+            this.maintenanceBindingSource1.DataSource = this.dBMaintenanceAlatDataSet1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label2.Location = new System.Drawing.Point(34, 80);
+            this.label2.Location = new System.Drawing.Point(45, 171);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(93, 16);
+            this.label2.Size = new System.Drawing.Size(119, 20);
             this.label2.TabIndex = 5;
             this.label2.Text = "PILIH TEKNISI";
             // 
@@ -123,9 +144,10 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label3.Location = new System.Drawing.Point(34, 111);
+            this.label3.Location = new System.Drawing.Point(45, 225);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(150, 16);
+            this.label3.Size = new System.Drawing.Size(189, 20);
             this.label3.TabIndex = 6;
             this.label3.Text = "TANGGAL PERBAIKAN";
             // 
@@ -133,19 +155,30 @@
             // 
             this.dtpTanggal.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.maintenanceBindingSource2, "tgl_service", true));
             this.dtpTanggal.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpTanggal.Location = new System.Drawing.Point(204, 106);
+            this.dtpTanggal.Location = new System.Drawing.Point(49, 249);
+            this.dtpTanggal.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpTanggal.MaxDate = new System.DateTime(2026, 6, 25, 0, 0, 0, 0);
+            this.dtpTanggal.MinDate = new System.DateTime(2026, 6, 24, 23, 59, 59, 0);
             this.dtpTanggal.Name = "dtpTanggal";
-            this.dtpTanggal.Size = new System.Drawing.Size(282, 22);
+            this.dtpTanggal.Size = new System.Drawing.Size(272, 26);
             this.dtpTanggal.TabIndex = 7;
+            this.dtpTanggal.Value = new System.DateTime(2026, 6, 25, 0, 0, 0, 0);
+            this.dtpTanggal.ValueChanged += new System.EventHandler(this.dtpTanggal_ValueChanged);
+            // 
+            // maintenanceBindingSource2
+            // 
+            this.maintenanceBindingSource2.DataMember = "Maintenance";
+            this.maintenanceBindingSource2.DataSource = this.dBMaintenanceAlatDataSet1;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label4.Location = new System.Drawing.Point(34, 145);
+            this.label4.Location = new System.Drawing.Point(45, 279);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(124, 16);
+            this.label4.Size = new System.Drawing.Size(156, 20);
             this.label4.TabIndex = 8;
             this.label4.Text = "JENIS PERBAIKAN";
             // 
@@ -154,9 +187,10 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label5.Location = new System.Drawing.Point(34, 179);
+            this.label5.Location = new System.Drawing.Point(45, 331);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(100, 16);
+            this.label5.Size = new System.Drawing.Size(123, 20);
             this.label5.TabIndex = 9;
             this.label5.Text = "KETERANGAN";
             // 
@@ -164,49 +198,63 @@
             // 
             this.txtKeterangan.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.maintenanceBindingSource4, "keterangan", true));
             this.txtKeterangan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtKeterangan.Location = new System.Drawing.Point(204, 174);
+            this.txtKeterangan.Location = new System.Drawing.Point(49, 355);
+            this.txtKeterangan.Margin = new System.Windows.Forms.Padding(4);
             this.txtKeterangan.Multiline = true;
             this.txtKeterangan.Name = "txtKeterangan";
-            this.txtKeterangan.Size = new System.Drawing.Size(282, 21);
+            this.txtKeterangan.Size = new System.Drawing.Size(272, 25);
             this.txtKeterangan.TabIndex = 11;
+            // 
+            // maintenanceBindingSource4
+            // 
+            this.maintenanceBindingSource4.DataMember = "Maintenance";
+            this.maintenanceBindingSource4.DataSource = this.dBMaintenanceAlatDataSet1;
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(623, 38);
+            this.btnUpdate.BackColor = System.Drawing.Color.Silver;
+            this.btnUpdate.Location = new System.Drawing.Point(192, 506);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(115, 54);
+            this.btnUpdate.Size = new System.Drawing.Size(129, 63);
             this.btnUpdate.TabIndex = 12;
             this.btnUpdate.Text = "Update";
-            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.UseVisualStyleBackColor = false;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnHapus
             // 
-            this.btnHapus.Location = new System.Drawing.Point(623, 95);
+            this.btnHapus.BackColor = System.Drawing.Color.Silver;
+            this.btnHapus.Location = new System.Drawing.Point(49, 577);
+            this.btnHapus.Margin = new System.Windows.Forms.Padding(4);
             this.btnHapus.Name = "btnHapus";
-            this.btnHapus.Size = new System.Drawing.Size(115, 48);
+            this.btnHapus.Size = new System.Drawing.Size(129, 63);
             this.btnHapus.TabIndex = 13;
             this.btnHapus.Text = "Hapus";
-            this.btnHapus.UseVisualStyleBackColor = true;
+            this.btnHapus.UseVisualStyleBackColor = false;
             this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
             // 
             // btnSimpan
             // 
-            this.btnSimpan.Location = new System.Drawing.Point(623, 146);
+            this.btnSimpan.BackColor = System.Drawing.Color.Silver;
+            this.btnSimpan.Location = new System.Drawing.Point(49, 506);
+            this.btnSimpan.Margin = new System.Windows.Forms.Padding(4);
             this.btnSimpan.Name = "btnSimpan";
-            this.btnSimpan.Size = new System.Drawing.Size(115, 50);
+            this.btnSimpan.Size = new System.Drawing.Size(129, 63);
             this.btnSimpan.TabIndex = 14;
             this.btnSimpan.Text = "Simpan";
-            this.btnSimpan.UseVisualStyleBackColor = true;
+            this.btnSimpan.UseVisualStyleBackColor = false;
             this.btnSimpan.Click += new System.EventHandler(this.btnSimpan_Click);
             // 
             // dgvMaintenance
             // 
             this.dgvMaintenance.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dgvMaintenance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMaintenance.Location = new System.Drawing.Point(37, 227);
+            this.dgvMaintenance.Location = new System.Drawing.Point(358, 115);
+            this.dgvMaintenance.Margin = new System.Windows.Forms.Padding(4);
             this.dgvMaintenance.Name = "dgvMaintenance";
-            this.dgvMaintenance.Size = new System.Drawing.Size(716, 213);
+            this.dgvMaintenance.RowHeadersWidth = 51;
+            this.dgvMaintenance.Size = new System.Drawing.Size(621, 525);
             this.dgvMaintenance.TabIndex = 15;
             this.dgvMaintenance.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
             this.dgvMaintenance.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMaintenance_CellClick);
@@ -215,27 +263,35 @@
             // 
             this.cbJenisPerbaikan.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.maintenanceBindingSource3, "jenis_perbaikan", true));
             this.cbJenisPerbaikan.FormattingEnabled = true;
-            this.cbJenisPerbaikan.Location = new System.Drawing.Point(204, 140);
+            this.cbJenisPerbaikan.Location = new System.Drawing.Point(49, 303);
+            this.cbJenisPerbaikan.Margin = new System.Windows.Forms.Padding(4);
             this.cbJenisPerbaikan.Name = "cbJenisPerbaikan";
-            this.cbJenisPerbaikan.Size = new System.Drawing.Size(282, 21);
+            this.cbJenisPerbaikan.Size = new System.Drawing.Size(272, 24);
             this.cbJenisPerbaikan.TabIndex = 16;
+            // 
+            // maintenanceBindingSource3
+            // 
+            this.maintenanceBindingSource3.DataMember = "Maintenance";
+            this.maintenanceBindingSource3.DataSource = this.dBMaintenanceAlatDataSet1;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.label6.Location = new System.Drawing.Point(34, 206);
+            this.label6.Location = new System.Drawing.Point(45, 384);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(50, 16);
+            this.label6.Size = new System.Drawing.Size(79, 20);
             this.label6.TabIndex = 17;
-            this.label6.Text = "Search";
+            this.label6.Text = "SEARCH";
             // 
             // txtCari
             // 
-            this.txtCari.Location = new System.Drawing.Point(204, 201);
+            this.txtCari.Location = new System.Drawing.Point(49, 408);
+            this.txtCari.Margin = new System.Windows.Forms.Padding(4);
             this.txtCari.Name = "txtCari";
-            this.txtCari.Size = new System.Drawing.Size(282, 20);
+            this.txtCari.Size = new System.Drawing.Size(272, 22);
             this.txtCari.TabIndex = 19;
             this.txtCari.TextChanged += new System.EventHandler(this.txtCari_TextChanged);
             // 
@@ -244,6 +300,7 @@
             this.bindingNavigator1.AddNewItem = this.bindingNavigatorAddNewItem;
             this.bindingNavigator1.CountItem = this.bindingNavigatorCountItem;
             this.bindingNavigator1.DeleteItem = this.bindingNavigatorDeleteItem;
+            this.bindingNavigator1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.bindingNavigator1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bindingNavigatorMoveFirstItem,
             this.bindingNavigatorMovePreviousItem,
@@ -263,9 +320,34 @@
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(800, 25);
+            this.bindingNavigator1.Size = new System.Drawing.Size(1016, 31);
             this.bindingNavigator1.TabIndex = 20;
             this.bindingNavigator1.Text = "bindingNavigator1";
+            // 
+            // bindingNavigatorAddNewItem
+            // 
+            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
+            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
+            this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorAddNewItem.Text = "Add new";
+            // 
+            // bindingNavigatorCountItem
+            // 
+            this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(45, 28);
+            this.bindingNavigatorCountItem.Text = "of {0}";
+            this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
+            // 
+            // bindingNavigatorDeleteItem
+            // 
+            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
+            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
+            this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(29, 28);
+            this.bindingNavigatorDeleteItem.Text = "Delete";
             // 
             // bindingNavigatorMoveFirstItem
             // 
@@ -273,7 +355,7 @@
             this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveFirstItem.Text = "Move first";
             // 
             // bindingNavigatorMovePreviousItem
@@ -282,13 +364,13 @@
             this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
             this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMovePreviousItem.Text = "Move previous";
             // 
             // bindingNavigatorSeparator
             // 
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 25);
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorPositionItem
             // 
@@ -296,21 +378,14 @@
             this.bindingNavigatorPositionItem.AutoSize = false;
             this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
-            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 23);
+            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(65, 27);
             this.bindingNavigatorPositionItem.Text = "0";
             this.bindingNavigatorPositionItem.ToolTipText = "Current position";
             // 
-            // bindingNavigatorCountItem
-            // 
-            this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(35, 22);
-            this.bindingNavigatorCountItem.Text = "of {0}";
-            this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
-            // 
             // bindingNavigatorSeparator1
             // 
-            this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // bindingNavigatorMoveNextItem
             // 
@@ -318,7 +393,7 @@
             this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
             this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveNextItem.Text = "Move next";
             // 
             // bindingNavigatorMoveLastItem
@@ -327,72 +402,49 @@
             this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
             this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorMoveLastItem.Text = "Move last";
             // 
             // bindingNavigatorSeparator2
             // 
-            this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // bindingNavigatorAddNewItem
-            // 
-            this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
-            this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
-            this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorAddNewItem.Text = "Add new";
-            // 
-            // bindingNavigatorDeleteItem
-            // 
-            this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
-            this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
-            this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorDeleteItem.Text = "Delete";
-            // 
-            // dBMaintenanceAlatDataSet1
-            // 
-            this.dBMaintenanceAlatDataSet1.DataSetName = "DBMaintenanceAlatDataSet1";
-            this.dBMaintenanceAlatDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // maintenanceBindingSource
-            // 
-            this.maintenanceBindingSource.DataMember = "Maintenance";
-            this.maintenanceBindingSource.DataSource = this.dBMaintenanceAlatDataSet1;
+            this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
             // maintenanceTableAdapter
             // 
             this.maintenanceTableAdapter.ClearBeforeFill = true;
             // 
-            // maintenanceBindingSource1
+            // button1
             // 
-            this.maintenanceBindingSource1.DataMember = "Maintenance";
-            this.maintenanceBindingSource1.DataSource = this.dBMaintenanceAlatDataSet1;
+            this.button1.BackColor = System.Drawing.Color.Silver;
+            this.button1.Location = new System.Drawing.Point(192, 577);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(129, 63);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "Cetak";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.btnCetakLaporan_Click);
             // 
-            // maintenanceBindingSource2
+            // label7
             // 
-            this.maintenanceBindingSource2.DataMember = "Maintenance";
-            this.maintenanceBindingSource2.DataSource = this.dBMaintenanceAlatDataSet1;
-            // 
-            // maintenanceBindingSource3
-            // 
-            this.maintenanceBindingSource3.DataMember = "Maintenance";
-            this.maintenanceBindingSource3.DataSource = this.dBMaintenanceAlatDataSet1;
-            // 
-            // maintenanceBindingSource4
-            // 
-            this.maintenanceBindingSource4.DataMember = "Maintenance";
-            this.maintenanceBindingSource4.DataSource = this.dBMaintenanceAlatDataSet1;
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label7.Location = new System.Drawing.Point(200, 51);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(523, 38);
+            this.label7.TabIndex = 22;
+            this.label7.Text = " KELOLA DATA MAINTENANCE";
             // 
             // FormMaintenance
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1016, 683);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.txtCari);
             this.Controls.Add(this.label6);
@@ -410,19 +462,20 @@
             this.Controls.Add(this.cbTeknisi);
             this.Controls.Add(this.cbAlat);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormMaintenance";
             this.Text = "FormMaintenanceAlat";
             this.Load += new System.EventHandler(this.FormMaintenance_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dBMaintenanceAlatDataSet1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMaintenance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dBMaintenanceAlatDataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.maintenanceBindingSource4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -465,5 +518,7 @@
         private System.Windows.Forms.BindingSource maintenanceBindingSource2;
         private System.Windows.Forms.BindingSource maintenanceBindingSource4;
         private System.Windows.Forms.BindingSource maintenanceBindingSource3;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label7;
     }
 }

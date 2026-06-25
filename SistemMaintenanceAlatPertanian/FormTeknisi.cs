@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,22 +23,59 @@ namespace SistemMaintenanceAlatPertanian
         public FormTeknisi()
         {
             InitializeComponent();
+            btnPilihFoto.Click += btnPilihFoto_Click;
         }
 
-        private void label1_Click(object sender, EventArgs e) { }
+        private void CatatLogError(string pesanError, string lokasiError)
+        {
+            try
+            {
+                string folderPath = Application.StartupPath + "\\Logs";
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string filePath = folderPath + "\\ErrorLog_" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+                string formatLog = $"[{DateTime.Now.ToString("HH:mm:ss")}] ERROR di {lokasiError} : {pesanError}";
+
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine(formatLog);
+                    sw.WriteLine(new string('-', 50));
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private byte[] ImageToByteArray(Image img)
+        {
+            if (img == null) return null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                return ms.ToArray();
+            }
+        }
+
+        private Image ByteArrayToImage(byte[] byteArrayIn)
+        {
+            if (byteArrayIn == null || byteArrayIn.Length == 0) return null;
+            using (MemoryStream ms = new MemoryStream(byteArrayIn))
+            {
+                Image img = Image.FromStream(ms);
+                return new Bitmap(img);
+            }
+        }
 
         private void ClearForm()
         {
             txtNamaTeknisi.Clear();
+            pbFotoTeknisi.Image = null;
             idTeknisiTerpilih = "";
             txtNamaTeknisi.Focus();
-        }
-
-        private void BindControls()
-        {
-            txtNamaTeknisi.DataBindings.Clear();
-
-            txtNamaTeknisi.DataBindings.Add("Text", bindingSource, "nama_teknisi", true, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void TampilData()
@@ -46,50 +84,50 @@ namespace SistemMaintenanceAlatPertanian
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT * FROM vwTeknisiPublic";
+                    string query = "SELECT id_teknisi, nama_teknisi, foto_teknisi FROM Teknisi";
                     using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
                     {
                         dtTeknisi = new DataTable();
                         da.Fill(dtTeknisi);
-
                         bindingSource.DataSource = dtTeknisi;
-
                         dgvTeknisi.DataSource = bindingSource;
-
-                        if (dgvTeknisi.Columns.Count > 0)
-                        {
-                            dgvTeknisi.Columns["id_teknisi"].HeaderText = "ID Teknisi";
-                            dgvTeknisi.Columns["nama_teknisi"].HeaderText = "Nama Teknisi";
-                        }
-
-                        BindControls();
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "TampilData");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal menampilkan data: " + ex.Message);
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "TampilData");
             }
         }
 
         private void FormTeknisi_Load(object sender, EventArgs e)
         {
             bindingNavigator1.BindingSource = bindingSource;
-
             dgvTeknisi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvTeknisi.MultiSelect = false;
             dgvTeknisi.ReadOnly = true;
             dgvTeknisi.AllowUserToAddRows = false;
             dgvTeknisi.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
             TampilData();
         }
 
-        private void txtNamaTeknisi_KeyPress(object sender, KeyPressEventArgs e)
+        private void btnPilihFoto_Click(object sender, EventArgs e)
         {
-            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                e.Handled = true;
+                ofd.Title = "Pilih Foto Teknisi";
+                ofd.Filter = "Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    pbFotoTeknisi.Image = Image.FromFile(ofd.FileName);
+                }
             }
         }
 
@@ -97,7 +135,7 @@ namespace SistemMaintenanceAlatPertanian
         {
             if (string.IsNullOrWhiteSpace(txtNamaTeknisi.Text))
             {
-                MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Nama Teknisi wajib diisi!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -110,29 +148,42 @@ namespace SistemMaintenanceAlatPertanian
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@nama_teknisi", txtNamaTeknisi.Text);
 
+                        byte[] fotoBytes = ImageToByteArray(pbFotoTeknisi.Image);
+                        if (fotoBytes != null)
+                        {
+                            cmd.Parameters.AddWithValue("@foto_teknisi", fotoBytes);
+                        }
+                        else
+                        {
+                            cmd.Parameters.Add("@foto_teknisi", SqlDbType.VarBinary, -1).Value = DBNull.Value;
+                        }
+
                         conn.Open();
                         cmd.ExecuteNonQuery();
-
                         MessageBox.Show("Data teknisi berhasil ditambahkan");
+                        ClearForm();
                         TampilData();
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "btnSimpan_Click");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "btnSimpan_Click");
+            }
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            DataRowView currentRecord = (DataRowView)bindingSource.Current;
-            if (currentRecord == null)
+            DataRowView row = (DataRowView)bindingSource.Current;
+            if (row == null)
             {
-                MessageBox.Show("Pilih data teknisi dari tabel dulu!");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtNamaTeknisi.Text))
-            {
-                MessageBox.Show("Nama Teknisi harus diisi", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Pilih data dari tabel terlebih dahulu!");
                 return;
             }
 
@@ -143,30 +194,49 @@ namespace SistemMaintenanceAlatPertanian
                     using (SqlCommand cmd = new SqlCommand("sp_UpdateTeknisi", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id_teknisi", currentRecord["id_teknisi"]);
+                        cmd.Parameters.AddWithValue("@id_teknisi", row["id_teknisi"]);
                         cmd.Parameters.AddWithValue("@nama_teknisi", txtNamaTeknisi.Text);
+
+                        byte[] fotoBytes = ImageToByteArray(pbFotoTeknisi.Image);
+                        if (fotoBytes != null)
+                        {
+                            cmd.Parameters.AddWithValue("@foto_teknisi", fotoBytes);
+                        }
+                        else
+                        {
+                            cmd.Parameters.Add("@foto_teknisi", SqlDbType.VarBinary, -1).Value = DBNull.Value;
+                        }
 
                         conn.Open();
                         cmd.ExecuteNonQuery();
-
-                        MessageBox.Show("Data berhasil diupdate");
+                        MessageBox.Show("Data berhasil diperbarui");
+                        ClearForm();
                         TampilData();
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "btnUpdate_Click");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "btnUpdate_Click");
+            }
         }
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            DataRowView currentRecord = (DataRowView)bindingSource.Current;
-            if (currentRecord == null)
+            DataRowView row = (DataRowView)bindingSource.Current;
+            if (row == null)
             {
-                MessageBox.Show("Pilih data teknisi dari tabel dulu!");
+                MessageBox.Show("Pilih data dari tabel terlebih dahulu!");
                 return;
             }
 
-            if (MessageBox.Show("Yakin ingin menghapus data?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
@@ -175,17 +245,26 @@ namespace SistemMaintenanceAlatPertanian
                         using (SqlCommand cmd = new SqlCommand("sp_DeleteTeknisi", conn))
                         {
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@id_teknisi", currentRecord["id_teknisi"]);
+                            cmd.Parameters.AddWithValue("@id_teknisi", row["id_teknisi"]);
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
-
                             MessageBox.Show("Data berhasil dihapus");
+                            ClearForm();
                             TampilData();
                         }
                     }
                 }
-                catch (Exception ex) { MessageBox.Show("Terjadi kesalahan: " + ex.Message); }
+                catch (SqlException sqlEx)
+                {
+                    MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CatatLogError(sqlEx.Message, "btnHapus_Click");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Terjadi kesalahan sistem:\n" + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CatatLogError(ex.Message, "btnHapus_Click");
+                }
             }
         }
 
@@ -201,16 +280,22 @@ namespace SistemMaintenanceAlatPertanian
                         cmd.Parameters.AddWithValue("@Keyword", txtCari.Text);
 
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable dtResults = new DataTable();
-                        da.Fill(dtResults);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
 
-                        bindingSource.DataSource = dtResults;
+                        bindingSource.DataSource = dt;
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CatatLogError(sqlEx.Message, "txtCari_TextChanged");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal mencari data teknisi: " + ex.Message);
+                MessageBox.Show("Gagal mencari data: " + ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CatatLogError(ex.Message, "txtCari_TextChanged");
             }
         }
 
@@ -222,6 +307,18 @@ namespace SistemMaintenanceAlatPertanian
                 if (row != null)
                 {
                     idTeknisiTerpilih = row["id_teknisi"].ToString();
+
+                    txtNamaTeknisi.Text = row["nama_teknisi"].ToString();
+
+                    if (row["foto_teknisi"] != DBNull.Value)
+                    {
+                        byte[] fotoBytes = (byte[])row["foto_teknisi"];
+                        pbFotoTeknisi.Image = ByteArrayToImage(fotoBytes);
+                    }
+                    else
+                    {
+                        pbFotoTeknisi.Image = null;
+                    }
                 }
             }
         }
