@@ -44,6 +44,7 @@
       <HintPath>..\packages\ExcelDataReader.DataSet.3.9.0\lib\net462\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.IO.Compression" />
@@ -64,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dal.cs" />
     <Compile Include="FormDashboard.cs">
       <SubType>Form</SubType>
     </Compile>

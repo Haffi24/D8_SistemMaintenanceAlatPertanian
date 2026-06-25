@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExcelDataReader;
 
@@ -15,13 +9,12 @@ namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormAlat : Form
     {
-        private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
+        private DAL dataAccess = new DAL();
 
         private BindingSource bindingSource = new BindingSource();
         private DataTable dtAlat = new DataTable();
         private string idAlatTerpilih = "";
 
-        // Variabel penampung data Excel sementara
         private DataTable dtExcel = new DataTable();
 
         public FormAlat()
@@ -55,6 +48,7 @@ namespace SistemMaintenanceAlatPertanian
 
         private void label1_Click(object sender, EventArgs e) { }
         private void label2_Click(object sender, EventArgs e) { }
+        private void label3_Click(object sender, EventArgs e) { }
 
         private void ClearForm()
         {
@@ -77,21 +71,10 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    string query = "SELECT * FROM vwAlatPublic";
-                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
-                    {
-                        dtAlat = new DataTable();
-                        da.Fill(dtAlat);
-
-                        bindingSource.DataSource = dtAlat;
-
-                        dgvAlat.DataSource = bindingSource;
-
-                        BindControls();
-                    }
-                }
+                dtAlat = dataAccess.GetAllAlat();
+                bindingSource.DataSource = dtAlat;
+                dgvAlat.DataSource = bindingSource;
+                BindControls();
             }
             catch (SqlException sqlEx)
             {
@@ -133,19 +116,11 @@ namespace SistemMaintenanceAlatPertanian
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                bool sukses = dataAccess.InsertAlat(txtNamaAlat.Text, cbKondisi.SelectedItem.ToString());
+                if (sukses)
                 {
-                    using (SqlCommand cmd = new SqlCommand("sp_InsertAlat", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@nama_alat", txtNamaAlat.Text);
-                        cmd.Parameters.AddWithValue("@kondisi_fisik", cbKondisi.SelectedItem.ToString());
-
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Data alat berhasil ditambahkan");
-                        TampilData();
-                    }
+                    MessageBox.Show("Data alat berhasil ditambahkan");
+                    TampilData();
                 }
             }
             catch (SqlException sqlEx)
@@ -171,20 +146,13 @@ namespace SistemMaintenanceAlatPertanian
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_UpdateAlat", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id_alat", row["id_alat"]);
-                        cmd.Parameters.AddWithValue("@nama_alat", txtNamaAlat.Text);
-                        cmd.Parameters.AddWithValue("@kondisi_fisik", cbKondisi.Text);
+                int idAlat = Convert.ToInt32(row["id_alat"]);
 
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Data berhasil diperbarui");
-                        TampilData();
-                    }
+                bool sukses = dataAccess.UpdateAlat(idAlat, txtNamaAlat.Text, cbKondisi.Text);
+                if (sukses)
+                {
+                    MessageBox.Show("Data berhasil diperbarui");
+                    TampilData();
                 }
             }
             catch (SqlException sqlEx)
@@ -212,18 +180,13 @@ namespace SistemMaintenanceAlatPertanian
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        using (SqlCommand cmd = new SqlCommand("sp_DeleteAlat", conn))
-                        {
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@id_alat", row["id_alat"]);
+                    int idAlat = Convert.ToInt32(row["id_alat"]);
 
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
-                            MessageBox.Show("Data berhasil dihapus");
-                            TampilData();
-                        }
+                    bool sukses = dataAccess.DeleteAlat(idAlat);
+                    if (sukses)
+                    {
+                        MessageBox.Show("Data berhasil dihapus");
+                        TampilData();
                     }
                 }
                 catch (SqlException sqlEx)
@@ -243,20 +206,8 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_SearchAlat", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Keyword", txtCari.Text);
-
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-
-                        bindingSource.DataSource = dt;
-                    }
-                }
+                DataTable dtCari = dataAccess.SearchAlat(txtCari.Text);
+                bindingSource.DataSource = dtCari;
             }
             catch (SqlException sqlEx)
             {
@@ -286,7 +237,7 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = dataAccess.GetConnection())
                 {
                     conn.Open();
                     string query = "UPDATE Alat SET nama_alat = 'DIRETAS' WHERE nama_alat = '" + txtNamaAlat.Text + "'";
@@ -298,11 +249,6 @@ namespace SistemMaintenanceAlatPertanian
                     }
                 }
                 TampilData();
-            }
-            catch (SqlException sqlEx)
-            {
-                MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                CatatLogError(sqlEx.Message, "btnTestInjection_Click");
             }
             catch (Exception ex)
             {
@@ -320,7 +266,7 @@ namespace SistemMaintenanceAlatPertanian
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    using (SqlConnection conn = dataAccess.GetConnection())
                     {
                         conn.Open();
 
@@ -362,13 +308,7 @@ namespace SistemMaintenanceAlatPertanian
                     }
 
                     MessageBox.Show("Data berhasil direset ke kondisi backup.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                     TampilData();
-                }
-                catch (SqlException sqlEx)
-                {
-                    MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    CatatLogError(sqlEx.Message, "buttonreset_click");
                 }
                 catch (Exception ex)
                 {
@@ -378,7 +318,6 @@ namespace SistemMaintenanceAlatPertanian
             }
         }
 
-      
         private void btnBrowseExcel_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "Excel Workbook|*.xlsx|Excel 97-2003 Workbook|*.xls" })
@@ -397,7 +336,7 @@ namespace SistemMaintenanceAlatPertanian
                                 });
 
                                 dtExcel = result.Tables[0];
-                                dgvAlat.DataSource = dtExcel; // Menampilkan sementara ke DataGridView
+                                dgvAlat.DataSource = dtExcel;
                             }
                         }
                     }
@@ -416,29 +355,21 @@ namespace SistemMaintenanceAlatPertanian
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    int berhasilImport = 0;
+                    foreach (DataRow row in dtExcel.Rows)
                     {
-                        conn.Open();
-                        foreach (DataRow row in dtExcel.Rows)
-                        {
-                            using (SqlCommand cmd = new SqlCommand("sp_InsertAlat", conn))
-                            {
-                                cmd.CommandType = CommandType.StoredProcedure;
-                                cmd.Parameters.AddWithValue("@nama_alat", row["nama_alat"].ToString());
-                                cmd.Parameters.AddWithValue("@kondisi_fisik", row["kondisi_fisik"].ToString());
+                        string nama = row["nama_alat"].ToString();
+                        string kondisi = row["kondisi_fisik"].ToString();
 
-                                cmd.ExecuteNonQuery();
-                            }
+                        if (dataAccess.InsertAlat(nama, kondisi))
+                        {
+                            berhasilImport++;
                         }
-                        MessageBox.Show("Data Excel berhasil diimport ke Database!");
-                        dtExcel.Clear();
-                        TampilData(); 
                     }
-                }
-                catch (SqlException sqlEx)
-                {
-                    MessageBox.Show("Terjadi penolakan dari Database:\n" + sqlEx.Message, "Peringatan Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    CatatLogError(sqlEx.Message, "btnImportExcel_Click");
+
+                    MessageBox.Show($"{berhasilImport} Data Excel berhasil diimport ke Database!");
+                    dtExcel.Clear();
+                    TampilData();
                 }
                 catch (Exception ex)
                 {
@@ -450,11 +381,6 @@ namespace SistemMaintenanceAlatPertanian
             {
                 MessageBox.Show("Pilih file Excel terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

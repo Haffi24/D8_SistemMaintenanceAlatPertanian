@@ -14,7 +14,7 @@ namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormTeknisi : Form
     {
-        private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
+        private DAL dataAccess = new DAL();
 
         private BindingSource bindingSource = new BindingSource();
         private DataTable dtTeknisi = new DataTable();
@@ -82,17 +82,9 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    string query = "SELECT id_teknisi, nama_teknisi, foto_teknisi FROM Teknisi";
-                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
-                    {
-                        dtTeknisi = new DataTable();
-                        da.Fill(dtTeknisi);
-                        bindingSource.DataSource = dtTeknisi;
-                        dgvTeknisi.DataSource = bindingSource;
-                    }
-                }
+                dtTeknisi = dataAccess.GetAllTeknisi();
+                bindingSource.DataSource = dtTeknisi;
+                dgvTeknisi.DataSource = bindingSource;
             }
             catch (SqlException sqlEx)
             {
@@ -141,29 +133,14 @@ namespace SistemMaintenanceAlatPertanian
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                byte[] fotoBytes = ImageToByteArray(pbFotoTeknisi.Image);
+                bool sukses = dataAccess.InsertTeknisi(txtNamaTeknisi.Text, fotoBytes);
+
+                if (sukses)
                 {
-                    using (SqlCommand cmd = new SqlCommand("sp_InsertTeknisi", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@nama_teknisi", txtNamaTeknisi.Text);
-
-                        byte[] fotoBytes = ImageToByteArray(pbFotoTeknisi.Image);
-                        if (fotoBytes != null)
-                        {
-                            cmd.Parameters.AddWithValue("@foto_teknisi", fotoBytes);
-                        }
-                        else
-                        {
-                            cmd.Parameters.Add("@foto_teknisi", SqlDbType.VarBinary, -1).Value = DBNull.Value;
-                        }
-
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Data teknisi berhasil ditambahkan");
-                        ClearForm();
-                        TampilData();
-                    }
+                    MessageBox.Show("Data teknisi berhasil ditambahkan");
+                    ClearForm();
+                    TampilData();
                 }
             }
             catch (SqlException sqlEx)
@@ -189,30 +166,16 @@ namespace SistemMaintenanceAlatPertanian
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                int idTeknisi = Convert.ToInt32(row["id_teknisi"]);
+                byte[] fotoBytes = ImageToByteArray(pbFotoTeknisi.Image);
+
+                bool sukses = dataAccess.UpdateTeknisi(idTeknisi, txtNamaTeknisi.Text, fotoBytes);
+
+                if (sukses)
                 {
-                    using (SqlCommand cmd = new SqlCommand("sp_UpdateTeknisi", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id_teknisi", row["id_teknisi"]);
-                        cmd.Parameters.AddWithValue("@nama_teknisi", txtNamaTeknisi.Text);
-
-                        byte[] fotoBytes = ImageToByteArray(pbFotoTeknisi.Image);
-                        if (fotoBytes != null)
-                        {
-                            cmd.Parameters.AddWithValue("@foto_teknisi", fotoBytes);
-                        }
-                        else
-                        {
-                            cmd.Parameters.Add("@foto_teknisi", SqlDbType.VarBinary, -1).Value = DBNull.Value;
-                        }
-
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Data berhasil diperbarui");
-                        ClearForm();
-                        TampilData();
-                    }
+                    MessageBox.Show("Data berhasil diperbarui");
+                    ClearForm();
+                    TampilData();
                 }
             }
             catch (SqlException sqlEx)
@@ -240,19 +203,14 @@ namespace SistemMaintenanceAlatPertanian
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        using (SqlCommand cmd = new SqlCommand("sp_DeleteTeknisi", conn))
-                        {
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@id_teknisi", row["id_teknisi"]);
+                    int idTeknisi = Convert.ToInt32(row["id_teknisi"]);
+                    bool sukses = dataAccess.DeleteTeknisi(idTeknisi);
 
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
-                            MessageBox.Show("Data berhasil dihapus");
-                            ClearForm();
-                            TampilData();
-                        }
+                    if (sukses)
+                    {
+                        MessageBox.Show("Data berhasil dihapus");
+                        ClearForm();
+                        TampilData();
                     }
                 }
                 catch (SqlException sqlEx)
@@ -272,20 +230,8 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_SearchTeknisi", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Keyword", txtCari.Text);
-
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-
-                        bindingSource.DataSource = dt;
-                    }
-                }
+                DataTable dtCari = dataAccess.SearchTeknisi(txtCari.Text);
+                bindingSource.DataSource = dtCari;
             }
             catch (SqlException sqlEx)
             {
@@ -320,6 +266,18 @@ namespace SistemMaintenanceAlatPertanian
                         pbFotoTeknisi.Image = null;
                     }
                 }
+            }
+        }
+
+        private void txtNamaTeknisi_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != ' ')
+            {
+
+                e.Handled = true;
+
+
+                System.Media.SystemSounds.Beep.Play();
             }
         }
     }

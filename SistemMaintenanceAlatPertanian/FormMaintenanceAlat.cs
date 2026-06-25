@@ -8,7 +8,7 @@ namespace SistemMaintenanceAlatPertanian
 {
     public partial class FormMaintenance : Form
     {
-        private readonly string connectionString = @"Data Source=LAPTOP-D3717QUD\USERHAFFI; Initial Catalog=DBMaintenanceAlat; Integrated Security=True;";
+        private DAL dataAccess = new DAL();
 
         private BindingSource bindingSource = new BindingSource();
         private DataTable dtMaintenance = new DataTable();
@@ -74,18 +74,11 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    string query = "SELECT id_alat, nama_alat FROM Alat";
-                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-
-                    cbAlat.DataSource = dt;
-                    cbAlat.DisplayMember = "nama_alat";
-                    cbAlat.ValueMember = "id_alat";
-                    cbAlat.SelectedIndex = -1;
-                }
+                DataTable dt = dataAccess.GetAllAlat();
+                cbAlat.DataSource = dt;
+                cbAlat.DisplayMember = "nama_alat";
+                cbAlat.ValueMember = "id_alat";
+                cbAlat.SelectedIndex = -1;
             }
             catch (SqlException sqlEx)
             {
@@ -103,18 +96,11 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    string query = "SELECT id_teknisi, nama_teknisi FROM Teknisi";
-                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-
-                    cbTeknisi.DataSource = dt;
-                    cbTeknisi.DisplayMember = "nama_teknisi";
-                    cbTeknisi.ValueMember = "id_teknisi";
-                    cbTeknisi.SelectedIndex = -1;
-                }
+                DataTable dt = dataAccess.GetAllTeknisi();
+                cbTeknisi.DataSource = dt;
+                cbTeknisi.DisplayMember = "nama_teknisi";
+                cbTeknisi.ValueMember = "id_teknisi";
+                cbTeknisi.SelectedIndex = -1;
             }
             catch (SqlException sqlEx)
             {
@@ -132,30 +118,21 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    string query = "SELECT m.id_maintenance, m.id_alat, a.nama_alat, m.id_teknisi, t.nama_teknisi, m.tgl_service, m.jenis_perbaikan, m.keterangan " +
-                                   "FROM Maintenance m JOIN Alat a ON m.id_alat = a.id_alat JOIN Teknisi t ON m.id_teknisi = t.id_teknisi";
+                dtMaintenance = dataAccess.GetAllMaintenance();
+                bindingSource.DataSource = dtMaintenance;
+                dgvMaintenance.DataSource = bindingSource;
 
-                    SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                    dtMaintenance = new DataTable();
-                    da.Fill(dtMaintenance);
+                dgvMaintenance.Columns["id_maintenance"].HeaderText = "ID";
+                dgvMaintenance.Columns["nama_alat"].HeaderText = "Nama Alat";
+                dgvMaintenance.Columns["nama_teknisi"].HeaderText = "Teknisi";
+                dgvMaintenance.Columns["tgl_service"].HeaderText = "Tanggal";
+                dgvMaintenance.Columns["jenis_perbaikan"].HeaderText = "Jenis Perbaikan";
+                dgvMaintenance.Columns["keterangan"].HeaderText = "Keterangan";
 
-                    bindingSource.DataSource = dtMaintenance;
-                    dgvMaintenance.DataSource = bindingSource;
+                dgvMaintenance.Columns["id_alat"].Visible = false;
+                dgvMaintenance.Columns["id_teknisi"].Visible = false;
 
-                    dgvMaintenance.Columns["id_maintenance"].HeaderText = "ID";
-                    dgvMaintenance.Columns["nama_alat"].HeaderText = "Nama Alat";
-                    dgvMaintenance.Columns["nama_teknisi"].HeaderText = "Teknisi";
-                    dgvMaintenance.Columns["tgl_service"].HeaderText = "Tanggal";
-                    dgvMaintenance.Columns["jenis_perbaikan"].HeaderText = "Jenis Perbaikan";
-                    dgvMaintenance.Columns["keterangan"].HeaderText = "Keterangan";
-
-                    dgvMaintenance.Columns["id_alat"].Visible = false;
-                    dgvMaintenance.Columns["id_teknisi"].Visible = false;
-
-                    BindControls();
-                }
+                BindControls();
             }
             catch (SqlException sqlEx)
             {
@@ -187,11 +164,9 @@ namespace SistemMaintenanceAlatPertanian
             cbAlat.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTeknisi.DropDownStyle = ComboBoxStyle.DropDownList;
 
-           
             dtpTanggal.MinDate = DateTime.Today;
             dtpTanggal.MaxDate = DateTime.Today;
             dtpTanggal.Value = DateTime.Today;
-           
 
             LoadAlat();
             LoadTeknisi();
@@ -208,23 +183,16 @@ namespace SistemMaintenanceAlatPertanian
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_InsertMaintenance", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id_alat", cbAlat.SelectedValue);
-                        cmd.Parameters.AddWithValue("@id_teknisi", cbTeknisi.SelectedValue);
-                        cmd.Parameters.AddWithValue("@tgl_service", dtpTanggal.Value.Date);
-                        cmd.Parameters.AddWithValue("@jenis_perbaikan", cbJenisPerbaikan.Text);
-                        cmd.Parameters.AddWithValue("@keterangan", txtKeterangan.Text);
+                int idAlat = Convert.ToInt32(cbAlat.SelectedValue);
+                int idTeknisi = Convert.ToInt32(cbTeknisi.SelectedValue);
 
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Data maintenance berhasil ditambahkan");
-                        TampilData();
-                        ClearForm();
-                    }
+                bool sukses = dataAccess.InsertMaintenance(idAlat, idTeknisi, dtpTanggal.Value.Date, cbJenisPerbaikan.Text, txtKeterangan.Text);
+
+                if (sukses)
+                {
+                    MessageBox.Show("Data maintenance berhasil ditambahkan");
+                    TampilData();
+                    ClearForm();
                 }
             }
             catch (SqlException sqlEx)
@@ -246,23 +214,16 @@ namespace SistemMaintenanceAlatPertanian
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_UpdateMaintenance", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id_maintenance", currentRecord["id_maintenance"]);
-                        cmd.Parameters.AddWithValue("@id_alat", cbAlat.SelectedValue);
-                        cmd.Parameters.AddWithValue("@id_teknisi", cbTeknisi.SelectedValue);
-                        cmd.Parameters.AddWithValue("@tgl_service", dtpTanggal.Value.Date);
-                        cmd.Parameters.AddWithValue("@jenis_perbaikan", cbJenisPerbaikan.Text);
-                        cmd.Parameters.AddWithValue("@keterangan", txtKeterangan.Text);
+                int idMaintenance = Convert.ToInt32(currentRecord["id_maintenance"]);
+                int idAlat = Convert.ToInt32(cbAlat.SelectedValue);
+                int idTeknisi = Convert.ToInt32(cbTeknisi.SelectedValue);
 
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        MessageBox.Show("Data berhasil diperbarui");
-                        TampilData();
-                    }
+                bool sukses = dataAccess.UpdateMaintenance(idMaintenance, idAlat, idTeknisi, dtpTanggal.Value.Date, cbJenisPerbaikan.Text, txtKeterangan.Text);
+
+                if (sukses)
+                {
+                    MessageBox.Show("Data berhasil diperbarui");
+                    TampilData();
                 }
             }
             catch (SqlException sqlEx)
@@ -286,18 +247,13 @@ namespace SistemMaintenanceAlatPertanian
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        using (SqlCommand cmd = new SqlCommand("sp_DeleteMaintenance", conn))
-                        {
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@id_maintenance", currentRecord["id_maintenance"]);
+                    int idMaintenance = Convert.ToInt32(currentRecord["id_maintenance"]);
+                    bool sukses = dataAccess.DeleteMaintenance(idMaintenance);
 
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
-                            MessageBox.Show("Data berhasil dihapus");
-                            TampilData();
-                        }
+                    if (sukses)
+                    {
+                        MessageBox.Show("Data berhasil dihapus");
+                        TampilData();
                     }
                 }
                 catch (SqlException sqlEx)
@@ -317,19 +273,14 @@ namespace SistemMaintenanceAlatPertanian
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_SearchMaintenance", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Keyword", txtCari.Text);
+                DataTable dtCari = dataAccess.SearchMaintenance(txtCari.Text);
+                bindingSource.DataSource = dtCari;
 
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-                        bindingSource.DataSource = dt;
-                    }
-                }
+                if (dgvMaintenance.Columns.Contains("id_alat"))
+                    dgvMaintenance.Columns["id_alat"].Visible = false;
+
+                if (dgvMaintenance.Columns.Contains("id_teknisi"))
+                    dgvMaintenance.Columns["id_teknisi"].Visible = false;
             }
             catch (SqlException sqlEx)
             {
@@ -357,15 +308,12 @@ namespace SistemMaintenanceAlatPertanian
 
         private void btnCetakLaporan_Click(object sender, EventArgs e)
         {
-            
-                FormLaporan frmLaporan = new FormLaporan();
-                frmLaporan.ShowDialog();
-            
+            FormLaporan frmLaporan = new FormLaporan();
+            frmLaporan.ShowDialog();
         }
 
         private void dtpTanggal_ValueChanged(object sender, EventArgs e)
         {
-
         }
     }
 }
